@@ -1,0 +1,15 @@
+{
+  "name": "@careeros/shared",
+  "version": "0.0.1",
+  "private": true,
+  "main": "src/index.js",
+  "type": "commonjs",
+  "dependencies": {
+    "@google/genai": "^1.0.0",
+    "@supabase/supabase-js": "^2.45.0",
+    "apify-client": "^2.9.0",
+    "cheerio": "^1.2.0",
+    "stream-json": "^3.5.0",
+    "undici": "^7.19.0"
+  }
+}

@@ -1,0 +1,14 @@
+-- ---------------------------------------------------------------------------
+-- confirmed_skills.entry_ref
+--   Bug fix (2026-08-05): a "confirmed skill with explanation" used to be
+--   attached to a résumé role/project purely by LLM guesswork at generation
+--   time (contentDirector.js + draftResume.js each independently inferring
+--   which entry the free-text explanation belonged to), which could land the
+--   content on the wrong, unrelated entry. entry_ref lets the user pick the
+--   exact entry when they explain — an index-based ref string matching the
+--   scheme contentDirector.js already uses internally, e.g. "role:2" or
+--   "project:0". Nullable: existing rows and naked (no-context) confirmations
+--   keep working unchanged; generation falls back to its old guessing
+--   behavior only when entry_ref is absent.
+-- ---------------------------------------------------------------------------
+alter table public.confirmed_skills add column entry_ref text;

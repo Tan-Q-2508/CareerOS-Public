@@ -1,0 +1,34 @@
+name: ATS Custom Adapter Tier — Contract-Drift Canary
+
+# Daily run of spec 18.3's contract-drift canary: each Custom Adapter Tier
+# adapter (18.2 — apple, amazon, google, meta today) runs one known-good query
+# and asserts the response still carries the fields the adapter reads. An
+# undocumented endpoint breaks silently on a redesign, and without this it's
+# indistinguishable from "no matching jobs right now" (§12.4's per-company
+# failure isolation swallows it by design). Results land in
+# ats_contract_checks, readable via GET /api/admin/ats-contract-checks — this
+# is the maintainer's own signal to go re-run live discovery on a platform, not a
+# user-facing notification (18.3).
+#
+# Deliberately its own workflow, separate from company-resweep.yml and
+# slug-pattern-mining.yml: different table, different purpose (platform-shape
+# health, not company detection), no reason to share a cadence.
+#
+# Required repo secrets (Settings -> Secrets and variables -> Actions):
+#   ADMIN_SECRET  — same value as the server's ADMIN_SECRET env var
+#   SERVER_URL    — e.g. https://careeros-server.onrender.com (no trailing slash)
+
+on:
+  schedule:
+    - cron: '0 7 * * *' # daily
+  workflow_dispatch: {} # manual "Run workflow" button, for testing
+
+jobs:
+  trigger:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Call ats-contract-check
+        run: |
+          curl -fsS -X POST \
+            -H "X-Admin-Secret: ${{ secrets.ADMIN_SECRET }}" \
+            "${{ secrets.SERVER_URL }}/api/internal/ats-contract-check"

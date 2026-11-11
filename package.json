@@ -1,0 +1,48 @@
+{
+  "name": "careeros",
+  "private": true,
+  "version": "0.0.1",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev:server": "npm run dev -w @careeros/server",
+    "start:server": "npm run start -w @careeros/server",
+    "classify-sectors": "node scripts/classify-sectors.js",
+    "refresh-visa-sponsors": "node scripts/refresh-visa-sponsors.js",
+    "backfill-job-registry-ids": "node scripts/backfill-job-registry-ids.js",
+    "backfill-keyword-coverage": "node scripts/backfill-keyword-coverage.js",
+    "test:keywords": "node packages/shared/src/ats/__tests__/keywordPipeline.test.js",
+    "test:prefilter": "node packages/shared/src/sourcing/__tests__/prefilter.test.js",
+    "test:scheduler": "node apps/server/src/scan/__tests__/scheduler.test.js",
+    "test:airouter": "node apps/server/src/lib/__tests__/aiRouter.test.js",
+    "test:autofill": "node apps/extension/src/core/__tests__/autofill.test.js",
+    "test:genericadapter": "node apps/extension/src/adapters/__tests__/genericAdapter.test.js",
+    "test:contactlinks": "node apps/server/src/generation/__tests__/contactLinks.test.js",
+    "test:watchlist": "node apps/server/src/watchlist/__tests__/curate.test.js",
+    "test:atscontract": "node packages/shared/src/sourcing/ats/__tests__/contractCheck.test.js",
+    "test:visa": "node apps/server/src/visa/__tests__/sponsorLookup.test.js",
+    "test:visaetl": "node apps/server/src/visa/__tests__/sponsorsEtl.test.js",
+    "test:sectors": "node apps/server/src/companies/__tests__/sectorLanes.test.js",
+    "test:classify": "node apps/server/src/companies/__tests__/classifyPass.test.js",
+    "test": "npm run test:keywords && npm run test:prefilter && npm run test:scheduler && npm run test:airouter && npm run test:autofill && npm run test:genericadapter && npm run test:contactlinks && npm run test:watchlist && npm run test:atscontract && npm run test:visa && npm run test:visaetl && npm run test:sectors && npm run test:classify && npm run test:atsadapters && npm run test:atscoverage && npm run test:startups && npm run test:connmode && npm run test:residue && npm run test:scanquality && npm run test:ondemand && npm run test:humanizer && npm run test:resumecontent && npm run test:membounds",
+    "sync:extension-shared": "node scripts/sync-extension-shared.js",
+    "test:atsadapters": "node packages/shared/src/sourcing/ats/__tests__/atsAdapters.test.js",
+    "test:connmode": "node packages/shared/src/ai/__tests__/connectionMode.test.js",
+    "test:residue": "node apps/server/src/generation/__tests__/residueFixes.test.js",
+    "hooks": "git config core.hooksPath .githooks",
+    "preflight": "node scripts/check-no-running-scans.js && node scripts/check-migration-timestamps.js",
+    "diff-wrap-metrics": "node scripts/diff-wrap-metrics.js",
+    "test:scanquality": "node apps/server/src/scoring/__tests__/scanQuality.test.js",
+    "test:ondemand": "node apps/server/src/scan/__tests__/onDemandScoring.test.js",
+    "test:membounds": "node packages/shared/src/sourcing/ats/__tests__/memoryBounds.test.js",
+    "test:atscoverage": "node packages/shared/src/sourcing/ats/__tests__/expandedCoverage.test.js",
+    "test:startups": "node apps/server/src/companies/__tests__/startups.test.js",
+    "test:humanizer": "node packages/shared/src/writing/__tests__/humanizer.test.js",
+    "test:resumecontent": "node apps/server/src/generation/__tests__/resumeContent.test.js"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  }
+}

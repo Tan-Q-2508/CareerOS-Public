@@ -1,0 +1,9 @@
+{
+  "name": "@careeros/extension",
+  "version": "0.3.0",
+  "private": true,
+  "description": "Application Autofill — Chrome MV3 content scripts (spec §17). Not a build target: Chrome loads src/ directly, and the manifest is the entry point, so there is no main/start here. manifest.json is the source of truth for the version; the field above mirrors it.",
+  "scripts": {
+    "test": "node src/core/__tests__/autofill.test.js"
+  }
+}

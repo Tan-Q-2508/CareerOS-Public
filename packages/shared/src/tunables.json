@@ -1,0 +1,622 @@
+{
+  "verdictThresholds": {
+    "pursue": 8,
+    "reviewMin": 6.5
+  },
+  "storageCutoff": 6,
+  "dashboardDisplayDefault": 7.5,
+  "yearsGapSeniorityStretchThreshold": 2,
+  "candidateYears": {
+    "internshipWeight": 0.5,
+    "mastersWeight": 0,
+    "mastersCapMonths": 24
+  },
+  "offDomainKeywordOverlapThreshold": 3,
+  "atsKeywordMatchTarget": 0.9,
+  "bulletFill": {
+    "strict": {
+      "oneLine": 0.9,
+      "twoLine": 1.75,
+      "maxLines": 2,
+      "pageFillMin": 0.9,
+      "pageFillTarget": 0.97
+    }
+  },
+  "repairLoopCap": {
+    "total": 4
+  },
+  "overallFitWeights": {
+    "atsMatch": 0.35,
+    "callbackOdds": 0.55,
+    "preferenceFit": 0.1
+  },
+  "scan": {
+    "heartbeatIntervalMs": 300000
+  },
+  "csJobCount": {
+    "default": 50,
+    "min": 10,
+    "max": 100
+  },
+  "coreScraperEnabled": false,
+  "autoTrackScrapedCompanies": false,
+  "enforceCosBalance": true,
+  "ldJobCount": {
+    "default": 100,
+    "min": 10,
+    "max": 500
+  },
+  "postedWithinDays": 3,
+  "jobRetentionDays": 30,
+  "sourcing": {
+    "apifyActorId": "curious_coder/linkedin-jobs-scraper",
+    "scrapeCompany": false,
+    "jsearch": {
+      "host": "jsearch.p.rapidapi.com",
+      "searchPath": "/search-v2",
+      "country": "us",
+      "resultsPerPage": 10,
+      "maxPages": 10,
+      "costPerRequestUsd": 0.005
+    }
+  },
+  "atsDirect": {
+    "platforms": {
+      "greenhouse": {
+        "boardApi": "https://boards-api.greenhouse.io/v1/boards"
+      },
+      "lever": {
+        "postingsApi": "https://api.lever.co/v0/postings"
+      },
+      "ashby": {
+        "boardApi": "https://api.ashbyhq.com/posting-api/job-board"
+      },
+      "workday": {
+        "pageSize": 20,
+        "maxListPages": 25,
+        "detailConcurrency": 3
+      },
+      "workable": {
+        "widgetApi": "https://apply.workable.com/api/v1/widget/accounts",
+        "minRequestIntervalMs": 1500
+      },
+      "oracle": {
+        "pageSize": 20,
+        "maxListPages": 25,
+        "detailConcurrency": 3
+      },
+      "eightfold": {
+        "pageSize": 20,
+        "maxListPages": 25,
+        "detailConcurrency": 3
+      },
+      "avature": {
+        "feedRequestSize": 500,
+        "detailConcurrency": 3
+      },
+      "apple": {
+        "pageSize": 20,
+        "maxListPages": 25,
+        "detailConcurrency": 3
+      },
+      "amazon": {
+        "pageSize": 20,
+        "maxListPages": 25
+      },
+      "google": {
+        "pageSize": 20,
+        "maxListPages": 25
+      },
+      "phenom": {
+        "pageSize": 20,
+        "maxListPages": 25,
+        "detailConcurrency": 3,
+        "maxDetails": 60
+      },
+      "meta": {
+        "detailConcurrency": 3
+      },
+      "smartrecruiters": {
+        "pageSize": 100,
+        "maxListPages": 10,
+        "detailConcurrency": 4
+      },
+      "recruitee": {},
+      "bamboohr": {
+        "detailConcurrency": 4
+      },
+      "breezy": {
+        "detailConcurrency": 3
+      },
+      "rippling": {
+        "detailConcurrency": 4
+      },
+      "successfactors": {
+        "maxListPages": 25,
+        "detailConcurrency": 3
+      },
+      "taleo": {
+        "maxListPages": 20,
+        "detailConcurrency": 3
+      },
+      "icims": {
+        "maxListPages": 20,
+        "detailConcurrency": 3
+      },
+      "jibe": {
+        "pageSize": 100,
+        "maxListPages": 10
+      },
+      "radancy": {
+        "pageSize": 100,
+        "maxListPages": 10,
+        "detailConcurrency": 3
+      },
+      "ycombinator": {
+        "detailConcurrency": 3
+      }
+    },
+    "detect": {
+      "maxSlugCandidates": 5,
+      "minedRules": [
+        "acronym",
+        "first_two_words"
+      ],
+      "requestTimeoutMs": 8000,
+      "probeConcurrency": 3
+    },
+    "autoDetect": {
+      "maxCompaniesPerScan": 25,
+      "companyConcurrency": 2
+    },
+    "resweep": {
+      "batchSize": 50
+    },
+    "slugMining": {
+      "minIncrementalHits": 25,
+      "maxUnverifiableCollisionRate": 0.02,
+      "examplesPerRule": 8,
+      "pageSize": 1000
+    },
+    "fetchLimitDefault": 200,
+    "streamParseThresholdBytes": 524288,
+    "maxBufferedBodyBytes": 16777216,
+    "jobCount": {
+      "default": 200,
+      "min": 10,
+      "max": 500
+    },
+    "maxTitlesPerScan": 20,
+    "maxLocationsPerScan": 10,
+    "maxRunWallClockMs": 3600000,
+    "backfillBatchSize": 10,
+    "companyFetchConcurrency": 8,
+    "scoringConcurrency": 5,
+    "scoringQueueMaxSize": 100,
+    "perOriginConnections": 5,
+    "minPlatformIntervalMs": {
+      "recruitee": 300
+    },
+    "keepAliveTimeoutMs": 30000,
+    "keepAliveMaxTimeoutMs": 600000,
+    "location": {
+      "aiResolveEnabled": true,
+      "resolveBatchSize": 40,
+      "unknownPolicy": "keep"
+    },
+    "scan": {
+      "requestTimeoutMs": 45000,
+      "companyAttempts": 3,
+      "pageAttempts": 3,
+      "minHostIntervalMs": {
+        "default": 0,
+        "phenom": 1100,
+        "workday": 150
+      }
+    }
+  },
+  "prefilter": {
+    "seniorTitleTerms": [
+      "senior",
+      "sr",
+      "staff",
+      "principal",
+      "lead",
+      "director",
+      "head of",
+      "vp",
+      "vice president"
+    ],
+    "usOnlyPhrases": [
+      "u.s. applicants only",
+      "us applicants only",
+      "united states applicants only",
+      "u.s. citizens only",
+      "us citizens only",
+      "united states citizens only",
+      "must be a u.s. citizen",
+      "must be a us citizen",
+      "u.s. citizenship",
+      "us citizenship",
+      "united states citizenship",
+      "citizenship required",
+      "u.s. persons only",
+      "us persons only",
+      "green card holders only",
+      "open only to u.s. based applicants"
+    ],
+    "workAuth": {
+      "rejectPatterns": {
+        "no_sponsorship": [
+          "\\b(?:no|not|ineligible|cannot|can't|will not|won't|do not|don't|does not|doesn't|unable to|not able to|without|no longer)\\b (?:[\\w/'\"-]+,? ){0,8}sponsor(?:s|ed|ing|ship)?\\b",
+          "\\bsponsorship\\W{0,3}(?:is |are |will be )?(?:not (?:available|provided|offered|possible|supported)|unavailable|no\\b|n/a\\b)",
+          "\\bsponsorship (?:will|can|could|shall) not be (?:provided|offered|available|considered|supported|possible)",
+          "\\b(?:unable to|not able to|cannot|can't|will not|won't|do not|does not|are not|is not|not) (?:currently )?(?:consider|accept|hire|hiring|considering|accepting|move forward with|able to consider)[^.]{0,60}\\b(?:who|that)\\b[^.]{0,60}\\b(?:require|need|requiring|needing)[^.]{0,60}\\bsponsor",
+          "\\b(?:require|need|requires|needs)[^.]{0,30}\\bsponsorship[^.]{0,60}\\b(?:not eligible|ineligible|will not be considered|cannot be considered|are not eligible)",
+          "\\b(?:require|requires|required|must (?:have|possess|hold)|possess|need)\\b[^.]{0,40}\\bunrestricted\\b[^.]{0,30}\\bwork authori[sz]ation",
+          "\\bunrestricted permanent (?:us |united states )?work authori[sz]ation",
+          "\\bnot (?:be )?able to\\b[^.]{0,160}\\bsupport (?:future |any )?(?:h1b |visa |immigration |employment )?sponsorship",
+          "\\b(?:must|required to|need to|should|shall) be (?:legally )?authori[sz]ed to work (?:in the (?:us|united states) )?for any (?:us |united states )?employer\\b"
+        ],
+        "citizen_only": [
+          "\\b(?:must|required to|need to|should|shall) (?:be|hold|have|possess|maintain)[^.]{0,30}\\b(?:us|united states|american) (?:citizen|citizenship|national)",
+          "\\b(?:us|united states) citizenship\\b[^.]{0,60}\\b(?:is |are )?(?:required|mandatory|a requirement)",
+          "\\b(?:us|united states) citizens? only\\b",
+          "\\b(?:open|available|limited|restricted) (?:only )?to (?:us |united states )?citizens\\b",
+          "\\bcitizens?\\b[^.]{0,120}\\b(?:refugees?|asylees?|asylum|green card holders?|permanent residents?)\\b[^.]{0,40}\\bonly\\b",
+          "\\bgreen card holders? only\\b",
+          "\\bcitizens?, (?:lawful |us )?permanent residents?,? (?:or|and) (?:protected individuals|refugees|asylees)"
+        ],
+        "us_person_export": [
+          "\\bus persons?\\b[^.]{0,40}\\b(?:as defined|under|only|required|within the meaning)",
+          "\\b(?:must|required to|need to) (?:be|qualify as) (?:a )?us person",
+          "\\b(?:itar|export control\\w*|export administration)\\b[^.]{0,160}\\b(?:must be|required to be|restricted to|limited to|only)\\b[^.]{0,60}\\b(?:us persons?|us citizens?|citizens?)\\b",
+          "\\brequires? access to (?:us )?export[- ]controlled\\b"
+        ],
+        "clearance": [
+          "\\b(?:active|current|existing|interim|final|must (?:have|hold|possess|obtain|be able to obtain|maintain)|ability (?:and willingness )?to obtain|eligib(?:le|ility) (?:to obtain|for)|requires?|required)\\b[^.]{0,60}\\b(?:secret|ts/sci|ts sci|top secret|security|dod|government|federal|public trust)\\b[^.]{0,20}\\bclearances?\\b",
+          "\\b(?:required )?clearance(?: level)?(?: required)?\\s*:\\s*\"?(?:secret|ts|top secret|ts/sci|active|yes|public trust|confidential|q\\b|l\\b)"
+        ]
+      },
+      "sponsorGuardPattern": "\\b(?:executive|project|program|business|corporate|event|affinity|clinical|study|trial|internal|key|senior|stakeholders?|team|customer|client|research|and)[\\s-]+sponsors?\\b(?!ship)|\\b(?:company|employee|employer)[\\s-]sponsored\\b|\\bsponsor[\\s-]dedicated",
+      "citizenEscapePattern": "otherwise (?:legally )?authori[sz]ed|or (?:have|possess|hold) (?:valid |current )?(?:work authori[sz]ation|authori[sz]ation to work)|any (?:valid )?work authori[sz]ation"
+    }
+  },
+  "aiProvider": "gemini",
+  "aiConnectionMode": "vertex",
+  "aiModelTier": {
+    "cheap": [
+      "gemini-3.5-flash-lite",
+      "gemini-3.1-flash-lite"
+    ],
+    "strong": [
+      "gemini-3.8-flash",
+      "gemini-3.5-flash",
+      "gemini-3-flash-preview"
+    ]
+  },
+  "parseModel": [
+    "gemini-3.8-flash",
+    "gemini-3.5-flash",
+    "gemini-3-flash-preview"
+  ],
+  "geminiCallTimeoutMs": 150000,
+  "aiModelCooldownMs": 300000,
+  "geminiRates": {
+    "gemini-3.1-pro-preview": {
+      "input": 2,
+      "cached": 0.2,
+      "output": 12
+    },
+    "gemini-3.8-flash": {
+      "input": 1.5,
+      "cached": 0.15,
+      "output": 7.5
+    },
+    "gemini-3.5-flash": {
+      "input": 1.5,
+      "cached": 0.15,
+      "output": 9
+    },
+    "gemini-3-flash-preview": {
+      "input": 0.5,
+      "cached": 0.05,
+      "output": 3
+    },
+    "gemini-3.5-flash-lite": {
+      "input": 0.3,
+      "cached": 0.03,
+      "output": 2.5
+    },
+    "gemini-3.1-flash-lite": {
+      "input": 0.25,
+      "cached": 0.025,
+      "output": 1.5
+    }
+  },
+  "scoring": {
+    "promptVersion": "score-v5",
+    "callTimeoutMs": 75000,
+    "selfConsistencyBoundaryDelta": 0.3,
+    "useUnifiedAtsEngineV2": true,
+    "normalizeJdTerms": true,
+    "strictLiteralMatching": true,
+    "maxAtomsPerJdTerm": 5,
+    "earlyAbandonScoring": true,
+    "jdExtraction": {
+      "tier": "cheap",
+      "samples": 2,
+      "minKeywords": 4,
+      "minCacheableKeywords": 3
+    },
+    "callbackRubric": {
+      "weights": {
+        "seniority_fit": 0.3,
+        "skills_evidence": 0.25,
+        "candidate_standing": 0.2,
+        "domain_fit": 0.15,
+        "authorization_fit": 0.1
+      },
+      "seniorityCeilingByGap": {
+        "under1": 7,
+        "under2": 5,
+        "twoPlus": 3
+      },
+      "seniorityGate": {
+        "appliesAtOrBelow": 5,
+        "headroom": 0.5
+      },
+      "hardRequirementCallbackMax": 3,
+      "postingLevel": {
+        "support": {
+          "seniority_fit": 5
+        },
+        "program": {
+          "candidate_standing": 4,
+          "callbackMax": 5
+        }
+      }
+    },
+    "keywordShrinkage": 2
+  },
+  "generation": {
+    "promptVersion": "resume-gen-v4",
+    "promptVersionV2": "resume-gen-v5",
+    "pageFit": {
+      "lineSpacing": {
+        "min": 0.92,
+        "max": 1.5,
+        "step": 0.02
+      },
+      "headerScale": {
+        "max": 1.3,
+        "step": 0.02
+      },
+      "marginIn": {
+        "default": 0.5,
+        "expanded": 0.75
+      }
+    },
+    "atsTargets": {
+      "ideal": 0.9,
+      "floor": 0.8
+    },
+    "repairRounds": {
+      "toIdeal": 2,
+      "toFloor": 2
+    },
+    "bulletsPerEntry": {
+      "min": 2,
+      "max": 4
+    },
+    "quantifiedRatioTarget": 0.5,
+    "atsSkillsOnlyWeight": 0.5,
+    "coreKeywordRatioTarget": 0.5,
+    "bulletCoverageTargets": {
+      "required": 0.9,
+      "niceToHave": 0.5
+    },
+    "twoLineSafetyCeiling": 1.9,
+    "fillPass": {
+      "maxBullets": 8,
+      "minOneLineBudget": 1
+    },
+    "atsWeightsV2": {
+      "full": 1,
+      "bulletOnly": 0.8,
+      "skillsOrSummaryOnly": 0.4
+    },
+    "contactLinks": {
+      "maxStored": 16,
+      "maxRenderedLines": 2
+    },
+    "maxConcurrentGenerations": 2
+  },
+  "coverLetter": {
+    "promptVersion": "cover-v3",
+    "wordCount": {
+      "min": 283,
+      "idealMin": 300,
+      "idealMax": 350
+    },
+    "marginIn": 1,
+    "bodySizePt": 11,
+    "bannedPhrases": [
+      "excited to apply",
+      "i am excited",
+      "i believe i would be a great fit",
+      "great fit for this role",
+      "great fit for the role",
+      "passionate about",
+      "leverage my skills",
+      "leverage my",
+      "i look forward to hearing from you",
+      "look forward to hearing from you soon",
+      "i am confident that i would",
+      "thrilled to",
+      "perfect fit",
+      "i am writing to express my interest"
+    ]
+  },
+  "humanizer": {
+    "enabled": true,
+    "maxSameOpeningVerb": 2,
+    "maxResultTails": 2,
+    "bannedWords": [
+      "delve", "tapestry", "testament", "pivotal", "crucial", "intricate", "meticulous", "realm",
+      "showcase", "underscore", "bolster", "garner", "foster", "vibrant", "multifaceted", "nuanced",
+      "seamless", "robust", "cutting-edge", "state-of-the-art", "groundbreaking", "game-changing",
+      "transformative", "holistic", "synergy", "synergies", "paradigm", "spearhead", "orchestrate",
+      "leverage", "utilize", "harness", "elevate", "empower", "unlock", "revolutionize",
+      "streamline", "enhance", "adept", "tech-savvy", "results-driven", "detail-oriented",
+      "innovative", "passionate", "world-class", "best-in-class", "invaluable",
+      "commendable", "noteworthy", "ever-evolving", "fast-paced", "additionally", "moreover",
+      "furthermore", "endeavor", "embark"
+    ],
+    "bannedPhrases": [
+      "excited to apply", "i am excited", "i believe i would be a great fit", "great fit for this role",
+      "great fit for the role", "passionate about", "leverage my skills", "leverage my",
+      "i look forward to hearing from you", "look forward to hearing from you soon",
+      "i am confident that i would", "thrilled to", "perfect fit", "i am writing to express my interest",
+      "i am writing to", "plays a crucial role", "plays a vital role", "plays a pivotal role", "plays a key role",
+      "a testament to", "serves as a", "stands as a", "in today's", "proven track record", "track record of success",
+      "strong analytical skills", "excellent communication skills", "excellent communicator", "team player",
+      "hit the ground running", "resonates with me", "resonate with me", "aligns perfectly", "align perfectly",
+      "drove strategic initiatives", "collaborated cross-functionally", "wealth of experience", "unique blend",
+      "eager to contribute", "commitment to excellence", "at the intersection of", "deep dive", "it's worth noting",
+      "it is worth noting", "in summary", "in conclusion", "a wide range of", "diverse array", "valuable insights",
+      "thank you for considering my application", "i would welcome the opportunity", "navigating the complexities", "expert in", "proven leader"
+    ]
+  },
+  "emailCheck": {
+    "promptVersion": "email-classify-v3",
+    "searchWindowDays": 30,
+    "maxCandidates": 50,
+    "queryCharBudget": 1200,
+    "maxSearchQueries": 12
+  },
+  "cosExchangeRate": 100,
+  "cosMargin": 2.5,
+  "flatFees": {
+    "cs_scan": 1,
+    "byo_scan": 5,
+    "ats_direct_scan": 1,
+    "resume_generation": 5,
+    "cover_letter_generation": 5,
+    "email_check": 5,
+    "manual_entry": 5,
+    "copilot_session": 8,
+    "copilot_continue": 3,
+    "application_qa": 2,
+    "watchlist_curate": 3
+  },
+  "byokExternalAiFeeRate": 0.1,
+  "byokExternalAiFeeFloor": 1,
+  "aiByokEnabled": false,
+  "copilot": {
+    "abandonedSessionTimeoutHours": 24,
+    "staleSeedingMinutes": 30,
+    "minEditBalance": 1,
+    "maxBulletChars": 400,
+    "debounceHintMs": 3000,
+    "promptVersion": "copilot-edit-v1"
+  },
+  "visaSponsors": {
+    "performancePageUrl": "https://www.dol.gov/agencies/eta/foreign-labor/performance",
+    "originBase": "https://www.dol.gov",
+    "requestTimeoutMs": 900000,
+    "batchSize": 500,
+    "topJobTitles": 5,
+    "minCertifiedFilings": 1,
+    "columns": {
+      "visaClass": "VISA_CLASS",
+      "caseStatus": "CASE_STATUS",
+      "employerName": "EMPLOYER_NAME",
+      "tradeNameDba": "TRADE_NAME_DBA",
+      "jobTitle": "JOB_TITLE",
+      "wageFrom": "WAGE_RATE_OF_PAY_FROM",
+      "wageUnit": "WAGE_UNIT_OF_PAY",
+      "pwWageLevel": "PW_WAGE_LEVEL"
+    },
+    "keepVisaClasses": [
+      "H-1B"
+    ],
+    "keepCaseStatuses": [
+      "CERTIFIED"
+    ],
+    "wageLevels": [
+      "I",
+      "II",
+      "III",
+      "IV",
+      "N/A"
+    ],
+    "minDbaKeyLength": 6,
+    "freshnessMaxDays": 100,
+    "tracklists": {
+      "minFilings": 1,
+      "entryLevelMinShare": 0.4,
+      "entryLevelMinFilings": 10
+    }
+  },
+  "sectorClassification": {
+    "soloTopSponsors": 100,
+    "soloMinSectors": 5,
+    "complexMinFilings": 25,
+    "complexMinSectors": 3,
+    "batchSizes": {
+      "standard": 50,
+      "complex": 5,
+      "solo": 1
+    },
+    "concurrency": 4,
+    "dryRunSampleSize": 500,
+    "canary": {
+      "platform": "amazon",
+      "slug": "amazon",
+      "sector": "logistics"
+    }
+  },
+  "watchlist": {
+    "maxSuggestions": 15,
+    "candidateSliceSize": 220,
+    "minSponsorFilings": 5,
+    "minRationaleChars": 40
+  },
+  "scoreCaps": {
+    "yearsGapUnder1": 7.9,
+    "yearsGap1to2": 6.9,
+    "yearsGap2Plus": 6.4,
+    "visaHigh": 7.9,
+    "hardRequirementUnmet": 6.4
+  },
+  "onDemandScoring": {
+    "maxJobsPerRequest": 25,
+    "concurrency": 3,
+    "minBalance": 1,
+    "staleScoringMinutes": 30
+  },
+  "triage": {
+    "version": 1,
+    "fullTermHits": 8,
+    "weights": {
+      "terms": 0.5,
+      "title": 0.5
+    },
+    "ceilingPower": 2,
+    "seniorTitle": {
+      "factor": 0.5,
+      "belowYears": 5
+    },
+    "bands": {
+      "strongMin": 70,
+      "possibleMin": 40
+    },
+    "maxHitTermsStored": 8
+  },
+  "startups": {
+    "maxTeamSize": 1000,
+    "crawlConcurrency": 8,
+    "ycMinIntervalMs": 400
+  }
+}

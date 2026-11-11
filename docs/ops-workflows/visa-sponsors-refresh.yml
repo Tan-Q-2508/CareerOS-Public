@@ -1,0 +1,67 @@
+name: Visa Sponsors — Quarterly DOL/OFLC Refresh
+
+# Quarterly refresh of visa_sponsors from the U.S. DOL/OFLC LCA (Form ETA-9035)
+# case-disclosure file (spec 19.1, §15 #48). Deliberately its own workflow with
+# its own cadence: this matches the SOURCE's release cycle — DOL publishes on an
+# FY-quarter schedule with a reporting lag — which is nothing like the daily,
+# weekly, or every-two-days cadences the other workflows here run on. Firing it
+# more often would just re-download a quarter of a gigabyte to write the same
+# numbers back.
+#
+# Runs a few days into each calendar quarter, giving DOL time to publish. The
+# endpoint discovers the newest file itself rather than constructing a URL, so
+# an early run against a not-yet-published quarter simply re-processes the
+# previous one instead of 404ing.
+#
+# ---------------------------------------------------------------------------
+# KNOWN LIMITATION, not an oversight: the current-quarter file is ~252 MB and
+# its worksheet is ~1.6 GB uncompressed. A real run peaks near 330 MB RSS on
+# top of the download, which does not fit Render's ~512 MB tier, so this
+# trigger is expected to OOM on the current host. The SUPPORTED path is
+#
+#   node scripts/refresh-visa-sponsors.js --apply
+#
+# run locally, which uses the exact same module. This workflow is committed
+# because 19.1 specifies the scheduled-internal-endpoint pattern and because it
+# becomes correct the moment the server moves to a larger instance — not
+# because it is expected to succeed today. Check the Render logs after a firing
+# before assuming the data refreshed.
+# ---------------------------------------------------------------------------
+#
+# Required repo secrets (Settings -> Secrets and variables -> Actions):
+#   ADMIN_SECRET  — same value as the server's ADMIN_SECRET env var
+#   SERVER_URL    — e.g. https://careeros-server.onrender.com (no trailing slash)
+
+on:
+  # SCHEDULE DELIBERATELY DISABLED, not forgotten. Per the memory ceiling
+  # documented above, a real firing OOMs on Render's ~512 MB tier — but a
+  # curl that gets its 202 back before the background pass dies still reports
+  # this job GREEN, so the schedule was silently claiming to refresh data it
+  # never refreshed. A quarterly job that fails green is worse than no
+  # quarterly job, because nothing ever surfaces the staleness.
+  #
+  # Until the server moves to a larger instance, the supported path stays
+  #
+  #   node scripts/refresh-visa-sponsors.js --apply
+  #
+  # run locally, which uses the exact same module. Re-enable the two lines
+  # below verbatim once the instance can hold the ~332 MB peak RSS; nothing
+  # else here needs to change.
+  #
+  # Staleness is no longer invisible in the meantime: checkSponsorFreshness()
+  # (apps/server/src/visa/sponsors.js) warns from the ats-contract-check pass
+  # once visa_sponsors data passes tunables.visaSponsors.freshnessMaxDays.
+  #
+  # schedule:
+  #   - cron: '0 8 5 1,4,7,10 *' # 08:00 UTC on the 5th of Jan/Apr/Jul/Oct
+  workflow_dispatch: {} # manual "Run workflow" button — the only trigger today
+
+jobs:
+  trigger:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Call refresh-visa-sponsors
+        run: |
+          curl -fsS -X POST \
+            -H "X-Admin-Secret: ${{ secrets.ADMIN_SECRET }}" \
+            "${{ secrets.SERVER_URL }}/api/internal/refresh-visa-sponsors"

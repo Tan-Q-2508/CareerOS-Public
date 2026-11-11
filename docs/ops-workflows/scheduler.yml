@@ -1,0 +1,26 @@
+name: Scan Scheduler
+
+# Triggers CareerOS's recurring-scan pass (spec §12.2) by curling a protected
+# internal endpoint on careeros-server every 30 minutes. The endpoint responds
+# 202 immediately and does the actual sourcing/scoring in the background, so
+# this workflow's own job just needs to fire the request — it doesn't wait for
+# scans to finish.
+#
+# Required repo secrets (Settings -> Secrets and variables -> Actions):
+#   ADMIN_SECRET  — same value as the server's ADMIN_SECRET env var
+#   SERVER_URL    — e.g. https://careeros-server.onrender.com (no trailing slash)
+
+on:
+  schedule:
+    - cron: '*/30 * * * *'
+  workflow_dispatch: {} # manual "Run workflow" button, for testing
+
+jobs:
+  trigger:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Call run-due-scans
+        run: |
+          curl -fsS -X POST \
+            -H "X-Admin-Secret: ${{ secrets.ADMIN_SECRET }}" \
+            "${{ secrets.SERVER_URL }}/api/internal/run-due-scans"

@@ -1,0 +1,83 @@
+{
+  "_comment": "True equivalents for keyword coverage (spec 5.1). NOT synonyms.json: that map also pairs different words (led/managed), which a literal ATS never credits and strictLiteralMatching keeps off. Only three kinds of entry belong here. identity: the same thing under another spelling (acronym, expansion, rename, vendor prefix). suites: holding the suite covers each member (one direction only). ladders: holding a higher credential covers the lower ones (one direction only). Lowercase throughout.",
+  "identity": [
+    ["ai", "artificial intelligence"],
+    ["ml", "machine learning"],
+    ["nlp", "natural language processing"],
+    ["genai", "generative ai", "gen ai"],
+    ["llm", "llms", "large language models", "large language model"],
+    ["bi", "business intelligence"],
+    ["power bi", "powerbi", "microsoft power bi"],
+    ["google workspace", "g suite", "gsuite", "google apps"],
+    ["microsoft office", "ms office", "microsoft 365", "office 365", "microsoft office suite", "ms office suite"],
+    ["uat", "user acceptance testing"],
+    ["doe", "design of experiments"],
+    ["capm", "certified associate in project management"],
+    ["pmp", "project management professional"],
+    ["kpi", "key performance indicator", "key performance indicators"],
+    ["okr", "objectives and key results"],
+    ["sop", "standard operating procedure", "standard operating procedures"],
+    ["gtm", "go-to-market", "go to market"],
+    ["ms project", "microsoft project"],
+    ["erp", "enterprise resource planning"],
+    ["mrp", "material requirements planning"],
+    ["wms", "warehouse management system"],
+    ["plm", "product lifecycle management"],
+    ["crm", "customer relationship management"],
+    ["qms", "quality management system"],
+    ["npi", "new product introduction"],
+    ["gd&t", "geometric dimensioning and tolerancing"],
+    ["dfm", "design for manufacturability", "design for manufacturing"],
+    ["dfma", "design for manufacturing and assembly", "design for manufacture and assembly"],
+    ["rca", "root cause analysis"],
+    ["vsm", "value stream mapping"],
+    ["jit", "just-in-time", "just in time"],
+    ["netsuite", "oracle netsuite"],
+    ["aws", "amazon web services"],
+    ["gcp", "google cloud platform"],
+    ["salesforce", "sfdc"],
+    ["javascript", "js"],
+    ["typescript", "ts"],
+    ["node.js", "nodejs"],
+    ["postgresql", "postgres"],
+    ["ci/cd", "continuous integration"],
+    ["a/b testing", "ab testing", "split testing"],
+    ["excel", "microsoft excel", "ms excel"],
+    ["powerpoint", "power point", "microsoft powerpoint", "ms powerpoint"],
+    ["word", "microsoft word", "ms word"],
+    ["outlook", "microsoft outlook"],
+    ["visio", "microsoft visio"],
+    ["sharepoint", "microsoft sharepoint"],
+    ["microsoft teams", "ms teams"],
+    ["google sheets", "sheets"],
+    ["google docs", "docs"],
+    ["google slides", "slides"],
+    ["google calendar", "calendar"],
+    ["google drive", "drive"],
+    ["lean six sigma", "lss"]
+  ],
+  "suites": [
+    {
+      "holders": ["microsoft office", "ms office", "microsoft 365", "office 365", "microsoft office suite", "ms office suite"],
+      "members": ["word", "excel", "powerpoint", "outlook", "microsoft teams", "onenote"]
+    },
+    {
+      "holders": ["google workspace", "g suite", "gsuite", "google apps"],
+      "members": ["gmail", "google calendar", "google docs", "google sheets", "google slides", "google drive", "google meet"]
+    }
+  ],
+  "ladders": [
+    {
+      "holders": ["lean six sigma black belt", "six sigma black belt"],
+      "covers": ["lean six sigma green belt", "six sigma green belt", "green belt", "lean six sigma yellow belt", "six sigma yellow belt", "yellow belt", "lean six sigma", "six sigma"]
+    },
+    {
+      "holders": ["lean six sigma green belt", "six sigma green belt"],
+      "covers": ["lean six sigma yellow belt", "six sigma yellow belt", "yellow belt", "lean six sigma", "six sigma"]
+    },
+    {
+      "holders": ["pmp", "project management professional"],
+      "covers": ["capm", "certified associate in project management"]
+    }
+  ]
+}

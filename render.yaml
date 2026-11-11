@@ -1,0 +1,75 @@
+services:
+  # Frontend SPA (apps/web) — static site. VITE_* vars are build-time and are
+  # embedded in the public bundle, so only ever set PUBLIC values here.
+  - type: web
+    name: careeros-web
+    runtime: static
+    buildCommand: npm install && npm run build -w @careeros/web
+    staticPublishPath: apps/web/dist
+    # SPA fallback so react-router deep links (e.g. /scan/:id/job/:id) resolve.
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html
+    envVars:
+      - key: VITE_API_BASE_URL
+        value: https://careeros-server.onrender.com
+      - key: VITE_SUPABASE_URL
+        sync: false
+      - key: VITE_SUPABASE_PUBLISHABLE_KEY
+        sync: false
+
+  - type: web
+    name: careeros-server
+    runtime: node
+    plan: free
+    buildCommand: npm install
+    startCommand: npm run start:server
+    healthCheckPath: /health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 3000
+      - key: SUPABASE_URL
+        sync: false
+      - key: SUPABASE_ANON_KEY
+        sync: false
+      - key: SUPABASE_SERVICE_ROLE_KEY
+        sync: false
+      - key: ADMIN_SECRET
+        sync: false
+      # AI provider (Gemini). vertex mode (GCP service account below) is the
+      # active mode, billed against a real GCP account; developer mode
+      # (GEMINI_API_KEY) is kept dormant in case vertex billing ever needs to
+      # be unlinked again.
+      - key: GEMINI_CONNECTION_MODE
+        value: vertex
+      - key: GCP_PROJECT_ID
+        sync: false
+      - key: GCP_VERTEX_LOCATION
+        sync: false
+      - key: GOOGLE_APPLICATION_CREDENTIALS_JSON
+        sync: false
+      - key: GEMINI_API_KEY
+        sync: false
+      # Core Scraper sourcing — house JSearch (RapidAPI) key. The always-on source.
+      - key: RAPIDAPI_KEY
+        sync: false
+      # BYO Scraper sourcing (Apify) — optional; only for a user's own connected actor.
+      - key: APIFY_TOKEN
+        sync: false
+      # Master key (AES-256-GCM, base64) encrypting users' own scraper keys at rest.
+      - key: CREDENTIALS_MASTER_KEY
+        sync: false
+
+# NO WORKER SERVICE, deliberately. One existed on Render's paid `starter`
+# plan — the only paid service in this file — running a Phase-1 Session-1
+# placeholder whose own header promised a Section 12 scheduler. That scheduler
+# was instead built as .github/workflows/scheduler.yml hitting
+# /api/internal/run-due-scans (12.2), so the process spent its life doing a
+# 60-second `select id from users limit 1` and nothing else, billed monthly.
+#
+# Phase 7 may bring a real always-on worker back (12.7: BullMQ + Redis, gated
+# on scheduled scans actually timing out). That is a new service on its own
+# terms, not a resurrection of this one.

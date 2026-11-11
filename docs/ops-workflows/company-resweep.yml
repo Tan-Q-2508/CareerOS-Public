@@ -1,0 +1,35 @@
+name: ATS Company Re-sweep
+
+# Re-attempts ATS platform detection on companies parked in
+# company_ats_unresolved (spec 4.6.3, entry point 4) by curling a protected
+# internal endpoint on careeros-server. A company that failed name-guessing once
+# may resolve later — a subsequent sighting can backfill a usable careers URL, or
+# the manual review pass can correct the row.
+#
+# Deliberately SEPARATE from scheduler.yml (§12.2): different table, different
+# endpoint, and a cadence measured in days rather than minutes. The endpoint
+# responds 202 immediately and sweeps in the background, so this job only has to
+# fire the request.
+#
+# Cadence note: 4.6.3 asks for "every 2-3 days". GitHub's day-of-month field
+# restarts at the 1st, so '*/2' gives a 1-day gap across some month boundaries
+# instead of 2 — still inside the 2-3 day intent, and simpler than any workaround.
+#
+# Required repo secrets (Settings -> Secrets and variables -> Actions):
+#   ADMIN_SECRET  — same value as the server's ADMIN_SECRET env var
+#   SERVER_URL    — e.g. https://careeros-server.onrender.com (no trailing slash)
+
+on:
+  schedule:
+    - cron: '0 5 */2 * *'
+  workflow_dispatch: {} # manual "Run workflow" button, for testing
+
+jobs:
+  trigger:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Call resweep-companies
+        run: |
+          curl -fsS -X POST \
+            -H "X-Admin-Secret: ${{ secrets.ADMIN_SECRET }}" \
+            "${{ secrets.SERVER_URL }}/api/internal/resweep-companies"

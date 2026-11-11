@@ -1,0 +1,229 @@
+/* panel.css — READABLE SOURCE ONLY, not loaded by the extension.
+   The panel and launcher render inside a shadow root (panel.js's
+   getShadowRoot()) so cosmetic ad-block filters can't hide them — a real
+   user's floating launcher button was silently removed by AdBlock Plus's
+   default filter lists before this change. A shadow tree has its own style
+   scope, so the manifest's content-script CSS injection (which targets the
+   page's light DOM) can no longer reach these rules; they're duplicated as
+   the PANEL_CSS template string in panel.js and injected into the shadow
+   root directly instead. Edit here for readability, then copy the change
+   into PANEL_CSS by hand — there's no build step to do it automatically.
+
+   Everything is scoped under #careeros-autofill-panel and uses explicit
+   values rather than inheriting, because this renders inside an arbitrary
+   third-party page whose own CSS we don't control and must not be affected
+   by. All colors are declared literally (no CSS variables from the host). */
+
+#careeros-autofill-panel,
+#careeros-autofill-panel * {
+  box-sizing: border-box;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  line-height: 1.45;
+}
+
+#careeros-autofill-panel {
+  position: fixed;
+  top: 16px;
+  right: 16px;
+  width: 380px;
+  max-height: calc(100vh - 32px);
+  display: flex;
+  flex-direction: column;
+  background: #ffffff;
+  color: #16181d;
+  border: 1px solid #d8dbe2;
+  border-radius: 12px;
+  box-shadow: 0 12px 32px rgba(16, 18, 24, 0.18);
+  z-index: 2147483647;
+  font-size: 13px;
+}
+
+#careeros-autofill-panel .cos-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 12px 14px;
+  border-bottom: 1px solid #eceef2;
+}
+
+#careeros-autofill-panel .cos-title {
+  font-weight: 650;
+  font-size: 13px;
+  letter-spacing: 0.01em;
+}
+
+#careeros-autofill-panel .cos-sub {
+  font-size: 11.5px;
+  color: #6b7280;
+  margin-top: 2px;
+}
+
+#careeros-autofill-panel .cos-close {
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font-size: 18px;
+  line-height: 1;
+  color: #6b7280;
+  padding: 2px 6px;
+  border-radius: 6px;
+}
+#careeros-autofill-panel .cos-close:hover { background: #f2f4f7; color: #16181d; }
+
+#careeros-autofill-panel .cos-body {
+  overflow-y: auto;
+  padding: 6px 0;
+  flex: 1 1 auto;
+}
+
+#careeros-autofill-panel .cos-section {
+  padding: 8px 14px 4px;
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: #8a90a0;
+}
+
+#careeros-autofill-panel .cos-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 9px;
+  padding: 7px 14px;
+}
+#careeros-autofill-panel .cos-row:hover { background: #f8f9fb; }
+
+#careeros-autofill-panel .cos-row input[type='checkbox'] {
+  margin: 3px 0 0 0;
+  flex: 0 0 auto;
+  width: 14px;
+  height: 14px;
+  accent-color: #2f6df6;
+}
+
+#careeros-autofill-panel .cos-label {
+  font-size: 12px;
+  color: #4a5060;
+  word-break: break-word;
+}
+
+#careeros-autofill-panel .cos-value {
+  font-size: 12.5px;
+  font-weight: 550;
+  color: #16181d;
+  word-break: break-word;
+  margin-top: 1px;
+}
+
+#careeros-autofill-panel .cos-src {
+  display: inline-block;
+  margin-top: 3px;
+  font-size: 10px;
+  font-weight: 650;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  padding: 1px 6px;
+  border-radius: 999px;
+  background: #eef2ff;
+  color: #3b5bdb;
+}
+#careeros-autofill-panel .cos-src.bank { background: #e9f7ef; color: #1c7a4a; }
+#careeros-autofill-panel .cos-src.file { background: #fff4e5; color: #a35b09; }
+
+#careeros-autofill-panel .cos-q input,
+#careeros-autofill-panel .cos-q textarea,
+#careeros-autofill-panel .cos-q select {
+  width: 100%;
+  margin-top: 5px;
+  padding: 6px 8px;
+  font-size: 12.5px;
+  color: #16181d;
+  background: #ffffff;
+  border: 1px solid #d8dbe2;
+  border-radius: 7px;
+}
+#careeros-autofill-panel .cos-q textarea { min-height: 62px; resize: vertical; }
+
+#careeros-autofill-panel .cos-note {
+  padding: 6px 14px 10px;
+  font-size: 11.5px;
+  color: #6b7280;
+}
+
+#careeros-autofill-panel .cos-foot {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  border-top: 1px solid #eceef2;
+}
+
+#careeros-autofill-panel .cos-btn {
+  flex: 1 1 auto;
+  padding: 8px 12px;
+  font-size: 12.5px;
+  font-weight: 620;
+  color: #ffffff;
+  background: #2f6df6;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+#careeros-autofill-panel .cos-btn:hover { background: #2559d6; }
+#careeros-autofill-panel .cos-btn[disabled] { background: #b9c3d6; cursor: default; }
+
+#careeros-autofill-panel .cos-btn.secondary {
+  flex: 0 0 auto;
+  color: #4a5060;
+  background: #f2f4f7;
+}
+#careeros-autofill-panel .cos-btn.secondary:hover { background: #e6e9ef; }
+
+#careeros-autofill-panel .cos-status {
+  padding: 0 14px 10px;
+  font-size: 11.5px;
+  color: #1c7a4a;
+}
+#careeros-autofill-panel .cos-status.err { color: #b3261e; }
+
+#careeros-autofill-launcher {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 2147483647;
+  padding: 10px 15px;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  font-size: 13px;
+  font-weight: 620;
+  color: #ffffff;
+  background: #2f6df6;
+  border: none;
+  border-radius: 999px;
+  box-shadow: 0 6px 18px rgba(47, 109, 246, 0.35);
+  cursor: pointer;
+}
+#careeros-autofill-launcher:hover { background: #2559d6; }
+
+@media (prefers-color-scheme: dark) {
+  #careeros-autofill-panel {
+    background: #16181d;
+    color: #eceef2;
+    border-color: #2c3038;
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.5);
+  }
+  #careeros-autofill-panel .cos-head,
+  #careeros-autofill-panel .cos-foot { border-color: #2c3038; }
+  #careeros-autofill-panel .cos-row:hover { background: #1d2027; }
+  #careeros-autofill-panel .cos-label { color: #a6adbb; }
+  #careeros-autofill-panel .cos-value { color: #eceef2; }
+  #careeros-autofill-panel .cos-q input,
+  #careeros-autofill-panel .cos-q textarea,
+  #careeros-autofill-panel .cos-q select {
+    background: #1d2027;
+    color: #eceef2;
+    border-color: #2c3038;
+  }
+  #careeros-autofill-panel .cos-btn.secondary { background: #262a33; color: #cbd1dc; }
+  #careeros-autofill-panel .cos-btn.secondary:hover { background: #2f343f; }
+}

@@ -1,0 +1,25 @@
+{
+  "name": "@careeros/server",
+  "version": "0.0.1",
+  "private": true,
+  "main": "src/index.js",
+  "scripts": {
+    "dev": "node src/index.js",
+    "start": "node src/index.js"
+  },
+  "dependencies": {
+    "@careeros/shared": "*",
+    "@fontsource/carlito": "^5.2.8",
+    "cors": "^2.8.5",
+    "docx": "^9.7.1",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "fontkit": "^2.0.4",
+    "helmet": "^7.1.0",
+    "mammoth": "^1.8.0",
+    "morgan": "^1.10.0",
+    "multer": "^1.4.5-lts.1",
+    "saxes": "^6.0.0",
+    "yauzl": "^3.4.0"
+  }
+}

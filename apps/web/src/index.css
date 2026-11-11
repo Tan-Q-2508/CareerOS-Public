@@ -1,0 +1,2159 @@
+/* CareerOS design system — LOCKED (spec Section 3). Warm ink-and-paper.
+   Do not casually redesign. Tokens mirror careeros_mockup.html. */
+:root {
+  --bg: #1c1917;
+  --bg-raised: #242019;
+  --text: #f0ebe1;
+  --text-dim: #b8af9e;
+  --accent: #c77d3e;
+  --positive: #8fa37e;
+  --danger: #b85c4d;
+  --caution: #d4a857;
+  --line: #3a342b;
+  --font-serif: 'Source Serif 4', serif;
+  --font-sans: 'Inter', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* ---------- App shell ---------- */
+.app {
+  display: flex;
+  min-height: 100vh;
+}
+main.main {
+  flex: 1;
+  /* A flex item defaults to min-width:auto, so the widest unbreakable child —
+     the scan selector sized to its longest option (a multi-title scan label)
+     — set the width of the whole page and pushed every card's score column
+     off-screen on a ~1000px window. */
+  min-width: 0;
+  padding: 36px 44px;
+  max-width: 1180px;
+}
+
+/* ---------- Sidebar ---------- */
+/* C1 (bug #7): was min-height:100vh inside a display:flex .app container, so
+   the sidebar STRETCHED to match its taller flex sibling (main.main) as job
+   rows loaded. .sidebar-foot's margin-top:auto then resolved against that
+   ever-growing stretched height, not the viewport — pinning the COS box lower
+   and lower as more jobs rendered. position:sticky only pins the top edge; it
+   never stopped the stretch. height:100vh (not min-height) + its own overflow
+   scroll fixes the sidebar's box at the viewport height, so margin-top:auto
+   resolves against 100vh and the COS box holds still regardless of how tall
+   main.main grows. */
+.sidebar {
+  width: 220px;
+  flex-shrink: 0;
+  background: var(--bg-raised);
+  border-right: 1px solid var(--line);
+  padding: 28px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  height: 100vh;
+  overflow-y: auto;
+  position: sticky;
+  top: 0;
+}
+.wordmark {
+  font-family: var(--font-serif);
+  font-weight: 700;
+  font-size: 19px;
+  letter-spacing: 0.02em;
+}
+.wordmark span {
+  color: var(--accent);
+}
+.nav {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.nav button {
+  all: unset;
+  cursor: pointer;
+  font-family: var(--font-sans);
+  font-size: 13.5px;
+  font-weight: 500;
+  color: var(--text-dim);
+  padding: 9px 10px;
+  border-radius: 3px;
+}
+.nav button:hover {
+  color: var(--text);
+  background: rgba(240, 235, 225, 0.04);
+}
+.nav button.active {
+  color: var(--text);
+  background: rgba(199, 125, 62, 0.14);
+  border-left: 2px solid var(--accent);
+  padding-left: 8px;
+}
+.nav button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+.nav-soon {
+  font-size: 9px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-dim);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 1px 6px;
+  margin-left: 6px;
+}
+.sidebar-foot {
+  margin-top: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.cos-box {
+  border: 1px solid var(--line);
+  border-radius: 2px;
+  padding: 14px;
+  background: rgba(0, 0, 0, 0.15);
+}
+.cos-label {
+  font-size: 10.5px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-dim);
+  margin-bottom: 6px;
+}
+.cos-amount {
+  font-family: var(--font-mono);
+  font-size: 22px;
+  font-weight: 600;
+  color: var(--caution);
+}
+.cos-buy {
+  display: block;
+  width: 100%;
+  text-align: center;
+  margin-top: 10px;
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--bg);
+  background: var(--accent);
+  padding: 11px 0;
+  border-radius: 2px;
+  border: none;
+  cursor: pointer;
+}
+.cos-buy.disabled,
+.btn-primary.disabled,
+.btn:disabled {
+  background: var(--line);
+  color: var(--text-dim);
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+.disabled-note {
+  font-size: 10px;
+  color: var(--text-dim);
+  margin-top: 4px;
+  text-align: center;
+}
+.user-line {
+  font-size: 11px;
+  color: var(--text-dim);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.user-line button {
+  all: unset;
+  cursor: pointer;
+  color: var(--accent);
+  font-size: 11px;
+  font-weight: 600;
+}
+
+/* ---------- Headers / buttons ---------- */
+/* Always stacked — title/sub block on top, action buttons on their own row
+   below — unconditionally, not just when a long title happens to force a
+   flex-wrap. A same-row layout (title left, buttons right) looked fine for
+   a short title, but a long ATS Direct title (several job titles joined)
+   forced flex-wrap to kick in, at which point the buttons didn't just move
+   down a bit — they jumped from "right-aligned, same row as the title" to
+   "left-aligned, new row entirely." That structural inconsistency, not
+   just the pixel offset, was the actual "shifting buttons" complaint.
+   Always stacking removes title length as a variable in where the buttons
+   sit at all. */
+.view-header {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin-bottom: 24px;
+  gap: 12px;
+}
+.view-title {
+  font-family: var(--font-serif);
+  font-weight: 700;
+  font-size: 26px;
+}
+.view-sub {
+  color: var(--text-dim);
+  font-size: 13px;
+  margin-top: 4px;
+}
+/* C2 (bug #8): a stable toolbar region for a view-header's action buttons —
+   every action renders in a fixed slot (disabled in place, never unmounted)
+   so the group never reflows as scan/job state changes. Replaces the old
+   inline marginLeft:'auto' hack that lived in .filter-row. */
+.view-toolbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.btn-danger {
+  color: var(--danger);
+  border-color: var(--danger);
+}
+.btn {
+  font-family: var(--font-sans);
+  font-size: 12.5px;
+  font-weight: 600;
+  border-radius: 2px;
+  padding: 9px 16px;
+  cursor: pointer;
+  border: 1px solid transparent;
+  background: transparent;
+  color: var(--text);
+}
+.btn-primary {
+  background: var(--accent);
+  color: var(--bg);
+}
+.btn-ghost {
+  background: transparent;
+  color: var(--text);
+  border-color: var(--line);
+}
+.btn-row {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+/* Fixed width so a button's busy-label swap (e.g. "Generate Cover Letter — 8
+   COS" -> "Generating…") never reflows the row (2026-07-27). Scoped to the
+   generation panel specifically — .btn-row is shared by several modals with
+   short single-button rows ("Done", "Save scraper") that shouldn't stretch.
+   Sized to the longest idle label; both idle and busy content center within it.
+   `width` (not `flex-basis`) so this still sizes correctly for CopilotButton,
+   whose <button> sits inside its own flex-column wrapper div rather than
+   directly in .btn-row — flex-basis there would set HEIGHT, not width, since
+   it follows that inner container's main axis. flex:0 0 auto keeps every
+   button from growing/shrinking off its explicit width in either context.
+   Scoped to a DIRECT .btn-row child of .gen-panel (2026-07-28) — GapCheckModal
+   renders its own "I have this / Explain / Skip" .btn-row nested several
+   levels inside .gen-panel (JobDetailView renders the modal as a sibling
+   further down the same panel's subtree), and the plain descendant selector
+   used to force those onto 236px each too — 3 * 236px + gaps overflowing the
+   560px modal and wrapping the row. */
+.gen-panel > .btn-row .btn {
+  width: 236px;
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  white-space: nowrap;
+}
+
+/* ---------- Verdict stamp ---------- */
+.stamp {
+  font-family: var(--font-sans);
+  font-weight: 700;
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  padding: 5px 10px;
+  border: 2px solid;
+  border-radius: 3px;
+  transform: rotate(-6deg);
+  display: inline-block;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+.stamp.pursue {
+  color: var(--positive);
+  border-color: var(--positive);
+}
+.stamp.review {
+  color: var(--caution);
+  border-color: var(--caution);
+}
+.stamp.pass {
+  color: var(--danger);
+  border-color: var(--danger);
+  opacity: 0.75;
+}
+
+/* ---------- Job cards ---------- */
+.filter-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 20px;
+  font-size: 12.5px;
+  color: var(--text-dim);
+  flex-wrap: wrap;
+}
+.filter-row select {
+  width: auto;
+  max-width: 100%;
+  text-overflow: ellipsis;
+  margin: 0;
+  padding: 5px 8px;
+}
+.job-card {
+  background: var(--bg-raised);
+  border: 1px solid var(--line);
+  border-left: 4px solid var(--line);
+  border-radius: 2px;
+  padding: 16px 18px;
+  margin-bottom: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  cursor: pointer;
+  text-align: left;
+  width: 100%;
+  font-family: inherit;
+  /* A <button> does NOT inherit body text color — it defaults to the UA's
+     black ButtonText, which made .job-title (no explicit color) render black
+     on the dark card. Anchor the card's text to parchment; dimmed children
+     (meta, source, score labels) keep their own --text-dim. */
+  color: var(--text);
+}
+.job-card:hover {
+  border-color: var(--text-dim);
+}
+.job-card.pursue {
+  border-left-color: var(--positive);
+}
+.job-card.review {
+  border-left-color: var(--caution);
+}
+.job-card.pass {
+  border-left-color: var(--danger);
+  opacity: 0.7;
+}
+.job-main {
+  flex: 1;
+  min-width: 0;
+}
+.job-title {
+  font-family: var(--font-serif);
+  font-weight: 600;
+  font-size: 16.5px;
+}
+.job-meta {
+  font-size: 12px;
+  color: var(--text-dim);
+  margin-top: 3px;
+}
+.job-source {
+  font-size: 10px;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  margin-right: 6px;
+}
+.job-scores {
+  display: flex;
+  gap: 18px;
+  align-items: center;
+}
+.score-mini {
+  text-align: center;
+}
+.score-mini .num {
+  font-family: var(--font-mono);
+  font-size: 17px;
+  font-weight: 600;
+}
+.score-mini .lbl {
+  font-size: 9px;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+.stale-flag {
+  font-size: 10px;
+  color: var(--caution);
+  margin-top: 4px;
+}
+
+/* ---------- Job detail ---------- */
+.detail-card {
+  background: var(--bg-raised);
+  border: 1px solid var(--line);
+  border-radius: 2px;
+  padding: 28px;
+}
+.detail-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 6px;
+  gap: 16px;
+}
+.detail-title {
+  font-family: var(--font-serif);
+  font-weight: 700;
+  font-size: 22px;
+}
+.detail-meta {
+  color: var(--text-dim);
+  font-size: 13px;
+  margin-top: 4px;
+}
+.score-row {
+  display: flex;
+  gap: 36px;
+  margin: 22px 0;
+  padding: 18px 0;
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  flex-wrap: wrap;
+}
+.score-block .num {
+  font-family: var(--font-mono);
+  font-size: 30px;
+  font-weight: 600;
+}
+.score-block .lbl {
+  font-size: 11px;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-top: 2px;
+}
+.note {
+  font-style: italic;
+  color: var(--text-dim);
+  font-size: 13.5px;
+  margin-bottom: 22px;
+}
+.tags-row {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 24px;
+}
+.risk-tag {
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  padding: 3px 9px;
+  font-size: 10.5px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+/* Job-card action row (Not for me + US-ONLY badge) — both are inline-level
+   elements inside .job-main, a block container, so alignSelf:'flex-start'
+   inline styles were previously inert and the two elements wrapped onto one
+   line with no gap. A real flex row fixes the layout; the button always
+   renders first so its position stays fixed whether or not the badge is
+   present. */
+.job-card-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 8px;
+}
+.job-card-not-for-me {
+  font-size: 11px;
+  font-weight: 600;
+  padding: 4px 12px;
+  border-radius: 4px;
+  border: 1px solid var(--danger);
+  background: color-mix(in srgb, var(--danger) 12%, transparent);
+  color: var(--danger);
+  cursor: pointer;
+  white-space: nowrap;
+}
+.job-card-not-for-me:disabled {
+  cursor: default;
+}
+/* Visa Sponsor badge (19.5) — deliberately reuses .risk-tag for the pill
+   itself; only the vintage line beneath it is new. 19.3 requires the vintage
+   to sit next to the number wherever this data is shown. */
+.visa-sponsor-badge-wrap {
+  display: inline-flex;
+  flex-direction: column;
+  gap: 3px;
+  align-items: flex-start;
+}
+/* Detail view only. The wrap is inline-flex and carries no bottom spacing,
+   which is right on a job card (it sits inline among other pills) but wrong on
+   the detail view, where it is a block-level row between .tags-row and
+   .kw-grid — and .kw-col h4 has no margin-top, so the vintage line lands flush
+   against the "Critical Missing" heading. 24px matches .tags-row, the sibling
+   it follows. Scoped to .is-detailed rather than applied to the wrap itself so
+   the compact card is untouched. */
+.visa-sponsor-badge-wrap.is-detailed {
+  margin-bottom: 24px;
+}
+.visa-sponsor-vintage {
+  font-size: 10px;
+  color: var(--text-dim);
+}
+/* The "no sponsorship data" state (19.5). Deliberately quieter than the
+   sponsor pill — it appears on most job cards, and it is an absence of an
+   answer, not a finding. The distinction from a real sponsor badge is carried
+   by the dot colour (.dot.none grey vs .dot.low green) and the text, not by
+   this rule alone; the muting only keeps a list of cards scannable. */
+.visa-sponsor-unknown {
+  color: var(--text-dim);
+  border-style: dashed;
+  opacity: 0.75;
+}
+/* AI-curated watchlist card (spec 20, §15 #50). Only the free-text box and the
+   rationale line need rules; everything else reuses .setting-card /
+   .disabled-note / .link-btn / .risk-tag like the sibling tracklist cards. */
+.wl-input {
+  width: 100%;
+  font: inherit;
+  font-size: 12.5px;
+  padding: 8px;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  background: transparent;
+  color: var(--text);
+  resize: vertical;
+}
+/* Build button + target-list picker on one row. The picker opts out of the
+   global `select` rule (width:100% + margin-bottom), which stretched it across
+   the row and knocked it out of line with the button. */
+.wl-actions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 8px;
+}
+.wl-target {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11.5px;
+  color: var(--text-dim);
+}
+.wl-target select {
+  width: auto;
+  max-width: 220px;
+  margin-bottom: 0;
+}
+.wl-group {
+  margin-top: 14px;
+}
+.wl-group-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  font-size: 11.5px;
+  color: var(--text-dim);
+  padding-bottom: 6px;
+}
+.wl-row {
+  border-top: 1px solid var(--line);
+  padding: 10px 0;
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+}
+.btn-sm {
+  padding: 4px 10px;
+  font-size: 11.5px;
+}
+/* The grounded citation. Never truncated — it is the whole justification for
+   the suggestion, and hiding it would defeat 20's grounding rule. */
+.wl-rationale {
+  font-size: 11.5px;
+  color: var(--text-dim);
+  margin-top: 3px;
+}
+.dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+}
+.dot.low {
+  background: var(--positive);
+}
+.dot.medium {
+  background: var(--caution);
+}
+.dot.high {
+  background: var(--danger);
+}
+.dot.none {
+  background: var(--text-dim);
+}
+.kw-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px 32px;
+  margin-bottom: 26px;
+}
+.kw-col h4 {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-dim);
+  margin-bottom: 8px;
+  font-weight: 600;
+}
+.kw-col ul {
+  list-style: none;
+  font-size: 13px;
+  line-height: 1.9;
+}
+.kw-col.crit li {
+  color: var(--danger);
+}
+.kw-col.have li {
+  color: var(--positive);
+}
+.kw-empty {
+  color: var(--text-dim);
+  font-style: italic;
+  font-size: 12.5px;
+}
+
+/* ---------- Generation panel ---------- */
+.gen-panel {
+  border: 1px solid var(--line);
+  border-radius: 2px;
+  padding: 16px 18px;
+  margin-top: 18px;
+  background: rgba(0, 0, 0, 0.12);
+}
+.gen-panel h4 {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-dim);
+  margin-bottom: 10px;
+}
+.gen-status {
+  font-size: 12.5px;
+  color: var(--text-dim);
+  margin-top: 10px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.gen-status.ok {
+  color: var(--positive);
+}
+.gen-status.err {
+  color: var(--danger);
+}
+
+/* ---------- Progress console (2026-07-27) ---------- */
+/* Code-style window for generation/scan/manual-entry progress + results — the
+   single place this content renders; see components/ProgressConsole.jsx. */
+.console-panel {
+  border: 1px solid var(--line);
+  border-radius: 2px;
+  background: rgba(0, 0, 0, 0.28);
+  margin-top: 14px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+}
+.console-body {
+  max-height: 260px;
+  overflow-y: auto;
+  padding: 12px 14px;
+}
+.console-empty {
+  color: var(--text-dim);
+  font-style: italic;
+}
+.console-section {
+  margin-bottom: 12px;
+}
+.console-section:last-child {
+  margin-bottom: 0;
+}
+.console-section-title {
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  margin-bottom: 4px;
+}
+.console-section-title.console-running {
+  color: var(--accent);
+}
+.console-section-title.console-ok {
+  color: var(--positive);
+}
+.console-section-title.console-err {
+  color: var(--danger);
+}
+.console-line {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 2px 0 2px 10px;
+  color: var(--text-dim);
+  line-height: 1.5;
+}
+.console-line-marker {
+  flex-shrink: 0;
+  opacity: 0.7;
+}
+.console-line-active {
+  color: var(--text);
+}
+.console-line-active .console-line-marker {
+  color: var(--accent);
+  opacity: 1;
+}
+.console-line-ok {
+  color: var(--positive);
+}
+.console-line-err {
+  color: var(--danger);
+}
+.console-line-text {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.console-cursor {
+  display: inline-block;
+  width: 6px;
+  height: 12px;
+  background: var(--accent);
+  animation: console-blink 1s step-start infinite;
+  vertical-align: middle;
+}
+@keyframes console-blink {
+  50% {
+    opacity: 0;
+  }
+}
+
+/* ---------- Settings ---------- */
+/* Named sections (spec 3.1, §15 #25a) — a labeled header above each section's
+   grid, replacing the single undifferentiated grid every card used to append
+   to. Not a new design system: same palette/card styling, just grouped. */
+.settings-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 28px;
+  border-bottom: 1px solid var(--line);
+  padding-bottom: 12px;
+}
+.settings-tab {
+  padding: 7px 14px;
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  background: transparent;
+  color: var(--text-dim);
+  font-size: 12.5px;
+  cursor: pointer;
+}
+.settings-tab:hover {
+  color: var(--text);
+}
+.settings-tab.active {
+  border-color: var(--accent);
+  background: rgba(199, 125, 62, 0.12);
+  color: var(--accent);
+  font-weight: 600;
+}
+.settings-section {
+  margin-bottom: 32px;
+}
+.settings-section-title {
+  font-family: var(--font-serif);
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin-bottom: 12px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--line);
+}
+.settings-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+/* C3 (bug #9): the Tracked Companies tab's Auto-track toggle is a single
+   checkbox — far shorter than TracklistsCard, so sharing a grid row with it
+   set the row height to the tall card and pushed SectorTracklistsCard far
+   below both. Auto-track now renders in its own compact full-width row
+   (outside .settings-grid entirely); TracklistsCard and SectorTracklistsCard
+   then share a plain .settings-grid row as genuine peers, so Sector
+   Tracklists is visible immediately beside Tracklists, not scrolled past. */
+.settings-row-full {
+  margin-bottom: 20px;
+}
+.setting-card {
+  background: var(--bg-raised);
+  border: 1px solid var(--line);
+  border-radius: 2px;
+  padding: 20px;
+}
+.setting-card h3 {
+  font-family: var(--font-serif);
+  font-size: 16px;
+  margin-bottom: 4px;
+}
+.setting-card p {
+  font-size: 12.5px;
+  color: var(--text-dim);
+  margin-bottom: 14px;
+}
+label.field-label {
+  display: block;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-dim);
+  margin-bottom: 6px;
+  margin-top: 4px;
+}
+input[type='text'],
+input[type='number'],
+input[type='email'],
+input[type='password'],
+select,
+textarea {
+  width: 100%;
+  background: var(--bg);
+  border: 1px solid var(--line);
+  color: var(--text);
+  padding: 9px 10px;
+  border-radius: 2px;
+  font-size: 12.5px;
+  margin-bottom: 8px;
+  font-family: var(--font-sans);
+}
+textarea {
+  resize: vertical;
+  min-height: 70px;
+}
+.toggle-row {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+.toggle-btn {
+  flex: 1;
+  text-align: center;
+  padding: 8px;
+  border: 1px solid var(--line);
+  border-radius: 2px;
+  font-size: 12px;
+  cursor: pointer;
+}
+.toggle-btn.selected {
+  border-color: var(--accent);
+  background: rgba(199, 125, 62, 0.12);
+  color: var(--accent);
+  font-weight: 600;
+}
+.toggle-btn.disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* ---------- Modal ---------- */
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.55);
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 60px 20px;
+  z-index: 40;
+  overflow-y: auto;
+}
+.modal {
+  background: var(--bg-raised);
+  border: 1px solid var(--line);
+  border-radius: 3px;
+  padding: 28px;
+  width: 100%;
+  max-width: 460px;
+}
+.modal h2 {
+  font-family: var(--font-serif);
+  font-size: 20px;
+  margin-bottom: 4px;
+}
+.modal .sub {
+  font-size: 12.5px;
+  color: var(--text-dim);
+  margin-bottom: 18px;
+}
+.switch-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 0;
+  border-top: 1px solid var(--line);
+  font-size: 13px;
+}
+.switch {
+  width: 42px;
+  height: 22px;
+  border-radius: 20px;
+  background: var(--line);
+  position: relative;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: background 0.15s;
+}
+.switch.on {
+  background: var(--accent);
+}
+.switch::after {
+  content: '';
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--text);
+  transition: transform 0.15s;
+}
+.switch.on::after {
+  transform: translateX(20px);
+  background: var(--bg);
+}
+.advanced-toggle {
+  all: unset;
+  cursor: pointer;
+  color: var(--accent);
+  font-size: 12px;
+  font-weight: 600;
+  margin: 8px 0 4px;
+  display: inline-block;
+}
+
+/* ---------- Misc ---------- */
+.spinner {
+  width: 14px;
+  height: 14px;
+  border: 2px solid var(--line);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+  display: inline-block;
+}
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+.centered {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 20px;
+}
+.card-narrow {
+  background: var(--bg-raised);
+  border: 1px solid var(--line);
+  border-radius: 3px;
+  padding: 32px;
+  width: 100%;
+  max-width: 400px;
+}
+.error-text {
+  color: var(--danger);
+  font-size: 12.5px;
+  margin: 8px 0;
+}
+.ok-text {
+  color: var(--positive);
+  font-size: 12.5px;
+  margin: 8px 0;
+}
+.empty-state {
+  border: 1px dashed var(--line);
+  border-radius: 2px;
+  padding: 40px;
+  text-align: center;
+  color: var(--text-dim);
+  font-size: 13px;
+}
+
+/* ---------- Tracker (Kanban board) ---------- */
+.tracker-board {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(168px, 1fr));
+  gap: 12px;
+  align-items: start;
+}
+.tracker-col {
+  background: rgba(0, 0, 0, 0.14);
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  padding: 10px 10px 12px;
+  min-height: 140px;
+}
+.tracker-col h4 {
+  font-size: 10.5px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--text-dim);
+  font-weight: 600;
+  margin-bottom: 10px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--line);
+}
+.tcard {
+  background: var(--bg-raised);
+  border: 1px solid var(--line);
+  border-radius: 3px;
+  padding: 10px 11px;
+  margin-bottom: 8px;
+}
+.tcard:last-child {
+  margin-bottom: 0;
+}
+.tcard .t {
+  font-family: var(--font-serif);
+  font-weight: 600;
+  font-size: 13.5px;
+  line-height: 1.25;
+}
+.tcard .c {
+  color: var(--text-dim);
+  font-size: 11px;
+  margin-top: 3px;
+}
+.link-btn {
+  all: unset;
+  cursor: pointer;
+  color: var(--accent);
+  font-weight: 600;
+}
+.spacer {
+  height: 12px;
+}
+.badge-pending {
+  display: inline-block;
+  border: 1px solid var(--caution);
+  color: var(--caution);
+  border-radius: 12px;
+  padding: 2px 8px;
+  font-size: 10.5px;
+  margin: 2px 4px 2px 0;
+}
+
+/* ---------- Copilot Mode (spec 7.14) ---------- */
+.copilot-shell {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+.copilot-topbar {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 10px 20px;
+  border-bottom: 1px solid var(--line);
+  background: var(--bg-raised);
+  flex-shrink: 0;
+}
+.copilot-topbar-title {
+  font-family: var(--font-serif);
+  font-weight: 700;
+  font-size: 15px;
+  flex: 1;
+}
+.copilot-topbar-cos {
+  font-size: 12px;
+  color: var(--text-dim);
+  font-family: var(--font-mono);
+}
+.copilot-split {
+  flex: 1;
+  display: flex;
+  min-height: 0;
+}
+
+/* Workbench (left pane) */
+.wb-pane {
+  width: 460px;
+  flex-shrink: 0;
+  overflow-y: auto;
+  padding: 20px;
+  border-right: 1px solid var(--line);
+  background: var(--bg);
+  position: relative; /* contains the Resume Vault drawer overlay below */
+}
+.wb-note {
+  font-size: 11.5px;
+  color: var(--text-dim);
+  font-style: italic;
+  margin-bottom: 16px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid var(--line);
+}
+.wb-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+.wb-export-btn {
+  padding: 6px 14px;
+  font-size: 11.5px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+}
+.wb-export-error {
+  font-size: 12px;
+  color: var(--danger);
+  border: 1px solid var(--danger);
+  border-radius: 2px;
+  padding: 8px 10px;
+  margin-bottom: 14px;
+}
+.wb-save-status {
+  font-size: 11px;
+  color: var(--text-dim);
+  font-family: var(--font-mono);
+}
+.wb-save-status-ok {
+  color: var(--positive);
+}
+.wb-save-status-err {
+  color: var(--danger);
+}
+.wb-stale-notice {
+  font-size: 12px;
+  color: var(--caution);
+  border: 1px solid var(--caution);
+  border-radius: 2px;
+  padding: 8px 10px;
+  margin-bottom: 14px;
+}
+/* Missing-keyword "pick a bullet" staging banner (Phase 3 bug fix, 2026-08-02) */
+.wb-stage-banner {
+  font-size: 12px;
+  color: var(--accent, #2563eb);
+  background: color-mix(in srgb, var(--accent, #2563eb) 8%, transparent);
+  border: 1px solid var(--accent, #2563eb);
+  border-radius: 2px;
+  padding: 8px 10px;
+  margin-bottom: 14px;
+}
+.wb-stage-banner-link,
+.wb-stage-banner-cancel {
+  background: none;
+  border: none;
+  padding: 0;
+  color: inherit;
+  text-decoration: underline;
+  cursor: pointer;
+  font-size: inherit;
+}
+.wb-icon-btn-staging {
+  outline: 2px solid var(--accent, #2563eb);
+  outline-offset: 1px;
+}
+.wb-kw-chip.active {
+  background: var(--accent, #2563eb);
+  color: #fff;
+  border-color: var(--accent, #2563eb);
+}
+.wb-kw-chips-staged {
+  margin-top: 4px;
+}
+.wb-ai-review {
+  font-size: 12px;
+}
+.wb-ai-review-text {
+  margin-bottom: 6px;
+}
+.wb-ai-review-note {
+  color: var(--caution);
+  margin-bottom: 6px;
+}
+/* Header / Skills editors (Phase 3 bug fix, 2026-08-02) */
+.wb-header-editor,
+.wb-skills-editor {
+  margin-bottom: 14px;
+}
+.wb-section-toggle {
+  background: none;
+  border: none;
+  padding: 4px 0;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  color: inherit;
+}
+.wb-header-form {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 8px 0 4px;
+}
+.wb-header-form label {
+  display: flex;
+  flex-direction: column;
+  font-size: 11px;
+  color: var(--text-dim, #666);
+  gap: 2px;
+}
+.wb-header-form input {
+  font-size: 13px;
+  padding: 5px 7px;
+  border: 1px solid var(--border, #ccc);
+  border-radius: 2px;
+  color: inherit;
+  background: var(--bg, transparent);
+}
+.wb-header-links {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  margin-top: 4px;
+}
+.wb-header-links-title {
+  font-size: 11px;
+  color: var(--text-dim, #666);
+}
+.wb-header-link-row {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+.wb-header-link-row select {
+  font-size: 13px;
+  padding: 5px 7px;
+  border: 1px solid var(--border, #ccc);
+  border-radius: 2px;
+  color: inherit;
+  background: var(--bg, transparent);
+  flex: 0 0 auto;
+}
+.wb-header-link-row input {
+  font-size: 13px;
+  padding: 5px 7px;
+  border: 1px solid var(--border, #ccc);
+  border-radius: 2px;
+  color: inherit;
+  background: var(--bg, transparent);
+  flex: 1 1 auto;
+  min-width: 0;
+}
+.wb-section-title {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-dim);
+  margin: 18px 0 8px;
+}
+.wb-section-title:first-child {
+  margin-top: 0;
+}
+.wb-card {
+  background: var(--bg-raised);
+  border: 1px solid var(--line);
+  border-radius: 3px;
+  padding: 12px 14px;
+  margin-bottom: 10px;
+}
+.wb-card.wb-drag-overlay {
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+  cursor: grabbing;
+}
+.wb-card-head {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+}
+.wb-card-head > div {
+  flex: 1;
+  min-width: 0;
+}
+.wb-card-title {
+  font-family: var(--font-serif);
+  font-weight: 600;
+  font-size: 13px;
+}
+.wb-card-dates {
+  font-size: 11px;
+  color: var(--text-dim);
+  margin-top: 2px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.wb-floor-warning {
+  font-size: 11px;
+  color: var(--caution);
+  margin-top: 8px;
+}
+.wb-bullet-list {
+  list-style: none;
+  margin-top: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.wb-bullet {
+  display: flex;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: 6px;
+  font-size: 12px;
+  line-height: 1.4;
+  padding-top: 8px;
+  border-top: 1px solid var(--line);
+}
+.wb-bullet:first-child {
+  padding-top: 0;
+  border-top: none;
+}
+.wb-bullet.wb-drag-overlay {
+  border: 1px solid var(--line);
+  border-radius: 3px;
+  padding: 8px 10px;
+  background: var(--bg-raised);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+  cursor: grabbing;
+}
+.wb-bullet-text {
+  flex: 1 1 220px;
+  min-width: 0;
+}
+.wb-bullet-meta {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 2px;
+  flex-wrap: wrap;
+  flex-basis: 100%;
+}
+.wb-drag {
+  flex-shrink: 0;
+  background: none;
+  border: none;
+  color: var(--text-dim);
+  cursor: grab;
+  padding: 0 2px;
+  font-size: 13px;
+  line-height: 1;
+  touch-action: none;
+}
+.wb-drag:hover {
+  color: var(--text);
+}
+.wb-drag:focus-visible {
+  outline: 1px solid var(--accent);
+  outline-offset: 1px;
+  border-radius: 2px;
+  color: var(--text);
+}
+.wb-fill-dot {
+  flex-shrink: 0;
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  margin-top: 4px;
+}
+.wb-fill-dot.ok {
+  background: #6a9a5a;
+}
+.wb-fill-dot.stub {
+  background: var(--caution);
+}
+.wb-fill-dot.over {
+  background: var(--danger);
+}
+.wb-variant-chips {
+  display: inline-flex;
+  gap: 3px;
+}
+.wb-variant-chip {
+  font-size: 9.5px;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  color: var(--text-dim);
+  background: none;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 1px 6px;
+  cursor: pointer;
+}
+.wb-variant-chip.active {
+  color: var(--accent);
+  border-color: var(--accent);
+}
+.wb-variant-pill,
+.wb-variant-pill-static {
+  font-size: 9.5px;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  color: var(--text-dim);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 1px 7px;
+}
+.wb-icon-btn {
+  flex-shrink: 0;
+  background: none;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  color: var(--text-dim);
+  font-size: 10px;
+  padding: 0px 6px;
+  cursor: pointer;
+}
+.wb-icon-btn:hover {
+  color: var(--text);
+  border-color: var(--text-dim);
+}
+.wb-icon-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+.wb-icon-btn-remove {
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  font-size: 9.5px;
+}
+/* Explicit reorder buttons alongside the drag handle (Session 19, spec
+   7.14.3) — same up/down mutation the drag gesture dispatches, but
+   click/keyboard-verifiable independent of pixel-drag compositing. */
+.wb-move-group {
+  display: inline-flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  gap: 1px;
+}
+.wb-move {
+  font-size: 8px;
+  line-height: 1;
+  padding: 0px 4px;
+}
+.wb-graveyard {
+  margin-top: 20px;
+  border-top: 1px solid var(--line);
+  padding-top: 12px;
+}
+.wb-graveyard-toggle {
+  background: none;
+  border: none;
+  color: var(--text-dim);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  cursor: pointer;
+  padding: 0;
+}
+.wb-graveyard-list {
+  list-style: none;
+  margin-top: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.wb-graveyard-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  font-size: 11.5px;
+  color: var(--text-dim);
+}
+.wb-tag {
+  display: inline-block;
+  font-size: 9.5px;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  color: var(--text-dim);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 1px 7px;
+}
+.wb-tag-origin {
+  color: var(--accent);
+  border-color: var(--accent);
+}
+.wb-tag-warn {
+  color: var(--danger);
+  border-color: var(--danger);
+}
+.wb-tag-ongoing {
+  color: var(--positive);
+  border-color: var(--positive);
+}
+
+/* Export-gate rejection highlighting (spec 7.14.4/16d) — the same offender
+   the error message below the toolbar names, marked directly on the
+   card/row so the user doesn't have to cross-reference an id. */
+.wb-card.is-offender {
+  border-color: var(--danger);
+}
+.wb-bullet.is-offender {
+  background: rgba(184, 92, 77, 0.1);
+  border-radius: 2px;
+}
+
+/* AI-edit panel (spec 7.14.6/16d) — rewrite / inject-keyword, one open at a
+   time per bullet. */
+.wb-icon-btn-ai {
+  color: var(--accent);
+  border-color: var(--accent);
+}
+.wb-icon-btn-ai.active {
+  background: var(--accent);
+  color: var(--bg);
+}
+.wb-ai-panel-row {
+  list-style: none;
+  flex-basis: 100%;
+}
+.wb-ai-panel {
+  margin-top: 4px;
+  padding: 10px 12px;
+  border: 1px solid var(--accent);
+  border-radius: 3px;
+  background: var(--bg-raised);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.wb-ai-tabs {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.wb-ai-tab {
+  background: none;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  color: var(--text-dim);
+  font-size: 10.5px;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  padding: 2px 8px;
+  cursor: pointer;
+}
+.wb-ai-tab.active {
+  color: var(--accent);
+  border-color: var(--accent);
+}
+.wb-ai-tab:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+.wb-ai-close {
+  margin-left: auto;
+}
+.wb-ai-form {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.wb-ai-input {
+  font-family: var(--font-sans);
+  font-size: 12px;
+  color: var(--text);
+  background: var(--bg);
+  border: 1px solid var(--line);
+  border-radius: 2px;
+  padding: 6px 8px;
+  resize: vertical;
+}
+.wb-ai-inline {
+  display: flex;
+  gap: 8px;
+}
+.wb-ai-inline .wb-ai-input {
+  flex: 1;
+  min-width: 0;
+}
+.wb-ai-submit {
+  align-self: flex-start;
+  font-size: 11px;
+  padding: 6px 12px;
+}
+.wb-kw-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.wb-kw-chip {
+  font-size: 10.5px;
+  color: var(--accent);
+  background: none;
+  border: 1px solid var(--accent);
+  border-radius: 10px;
+  padding: 2px 8px;
+  cursor: pointer;
+}
+.wb-kw-chip:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+.wb-ai-error {
+  font-size: 11px;
+  color: var(--danger);
+}
+
+/* Live ATS Scoreboard + Missing Keywords pane (spec 7.14.12/7.14.13, Session
+   21b) — sticky at the top of .wb-pane rather than a third screen column
+   (see AtsPanel.jsx's header comment for the screen-space math). Solid
+   background matching .wb-pane so scrolled bullet rows don't show through.
+   Only the score + bar stay sticky (small, fixed height) — the gap hint,
+   suggestions list, and keyword chips below (.wb-ats-panel-body) scroll away
+   normally, so they don't permanently eat the pane's visible height and
+   crowd out the bullets being edited (live user complaint 2026-08-14). */
+.wb-ats-panel {
+  position: sticky;
+  top: -20px; /* cancels .wb-pane's own 20px padding so this pins flush to the pane top */
+  margin: -20px -20px 0;
+  padding: 14px 20px 12px;
+  background: var(--bg);
+  border-bottom: 1px solid var(--line);
+  z-index: 2;
+}
+.wb-ats-panel-body {
+  margin: 0 0 12px;
+}
+.wb-ats-score-row {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+.wb-ats-score {
+  font-family: var(--font-mono);
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--text-dim);
+}
+.wb-ats-score-good {
+  color: var(--positive);
+}
+.wb-ats-score-warn {
+  color: var(--caution);
+}
+.wb-ats-score-bad {
+  color: var(--danger);
+}
+.wb-ats-score-label {
+  font-size: 11px;
+  color: var(--text-dim);
+}
+.wb-ats-reconciling {
+  font-style: italic;
+}
+.wb-ats-bar {
+  height: 3px;
+  border-radius: 2px;
+  background: var(--line);
+  margin-top: 6px;
+  overflow: hidden;
+}
+.wb-ats-bar-fill {
+  height: 100%;
+  background: var(--accent);
+  transition: width 0.2s ease;
+}
+.wb-ats-summary {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  margin-top: 8px;
+  padding: 0;
+  background: none;
+  border: none;
+  color: var(--text-dim);
+  font-size: 11px;
+  cursor: pointer;
+}
+.wb-ats-gap-hint {
+  margin-top: 6px;
+  font-size: 11px;
+  color: var(--caution);
+}
+.wb-ats-count {
+  font-family: var(--font-mono);
+  font-weight: 600;
+}
+.wb-ats-summary-label {
+  color: var(--text-dim);
+}
+.wb-ats-chips {
+  margin-top: 8px;
+}
+.wb-ats-divider {
+  width: 100%;
+  height: 1px;
+  background: var(--line);
+  margin: 2px 0;
+}
+/* Chip tier colors (spec 7.14.12): green = demonstrated in a real bullet,
+   yellow = Skills/Summary only, red = missing entirely — locked tokens only. */
+.wb-kw-chip-core {
+  color: var(--positive);
+  border-color: var(--positive);
+}
+.wb-kw-chip-skills {
+  color: var(--caution);
+  border-color: var(--caution);
+}
+.wb-kw-chip-missing {
+  color: var(--danger);
+  border-color: var(--danger);
+  opacity: 0.85;
+  /* Session 21c: clickable again — opens the Vault drawer filtered to this
+     term (spec 7.14.11/7.14.12). Was `cursor:default` when red chips did
+     nothing; now matches the other tiers' pointer cursor. */
+}
+.wb-kw-chip-nice {
+  font-size: 9.5px;
+  opacity: 0.85;
+}
+
+/* A Missing Keywords chip click "pins" the bullet that demonstrates it —
+   survives past the next mouse move, unlike the plain hover outline. */
+.wb-bullet.is-pinned {
+  outline: 1.5px solid var(--accent);
+  outline-offset: -1px;
+  border-radius: 2px;
+}
+
+/* Gaming-guardrail hint (spec 7.14.13 ¶2) — soft, non-blocking, non-scoring. */
+.wb-tag-hint {
+  color: var(--caution);
+  border-color: var(--caution);
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+}
+.wb-tag-hint-dismiss {
+  background: none;
+  border: none;
+  color: inherit;
+  font-size: 11px;
+  line-height: 1;
+  padding: 0;
+  cursor: pointer;
+}
+
+/* Custom Bullet Injector (spec 7.14.14) — a trailing "+ Add bullet" row in
+   every entry's bullet list, outside dnd-kit's tracked sortable items. */
+.wb-add-bullet-row {
+  list-style: none;
+  margin-top: 4px;
+}
+.wb-add-bullet-toggle {
+  background: none;
+  border: 1px dashed var(--line);
+  border-radius: 2px;
+  color: var(--text-dim);
+  font-size: 11px;
+  padding: 5px 10px;
+  width: 100%;
+  text-align: left;
+  cursor: pointer;
+}
+.wb-add-bullet-toggle:hover {
+  color: var(--text);
+  border-color: var(--accent);
+}
+.wb-add-bullet-open {
+  border: 1px solid var(--line);
+  border-radius: 3px;
+  padding: 10px;
+  margin-top: 4px;
+  background: var(--bg-raised);
+}
+.wb-add-bullet-input-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+}
+.wb-add-bullet-input-row .wb-ai-input {
+  flex: 1;
+  min-width: 0;
+}
+.wb-confirm-rows {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.wb-confirm-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  font-size: 11.5px;
+  color: var(--caution);
+  border: 1px solid var(--caution);
+  border-radius: 2px;
+  padding: 6px 8px;
+}
+.wb-confirm-row .btn {
+  font-size: 10.5px;
+  padding: 3px 8px;
+  flex-shrink: 0;
+}
+
+/* Resume Vault drawer (spec 7.14.11) — an overlay over .wb-pane (maintainer
+   decision, Session 21c), not a third screen column; same reasoning
+   AtsPanel.jsx's placement already documents. .wb-pane carries the
+   `position:relative` this overlay is positioned against. */
+.wb-vault-toggle.active {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+.wb-vault-drawer {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  background: var(--bg);
+  overflow-y: auto;
+  padding: 20px;
+  border-left: 1px solid var(--line);
+  box-shadow: -8px 0 24px rgba(0, 0, 0, 0.35);
+}
+.wb-vault-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 14px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--line);
+}
+.wb-vault-empty {
+  font-size: 12px;
+  color: var(--text-dim);
+  font-style: italic;
+  padding: 10px 0;
+}
+.wb-vault-section {
+  margin-bottom: 18px;
+}
+.wb-vault-section-title {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-dim);
+  margin-bottom: 8px;
+}
+.wb-vault-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.wb-vault-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  background: var(--bg-raised);
+  border: 1px solid var(--line);
+  border-radius: 3px;
+  padding: 8px 10px;
+}
+.wb-vault-item-text {
+  font-size: 12px;
+  color: var(--text);
+  min-width: 0;
+}
+.wb-vault-item-dates {
+  display: block;
+  font-size: 10.5px;
+  color: var(--text-dim);
+  margin-top: 2px;
+}
+.wb-vault-item-preview {
+  font-size: 11px;
+  color: var(--text-dim);
+  margin-top: 2px;
+}
+.wb-vault-add {
+  font-size: 10.5px;
+  padding: 4px 10px;
+  flex-shrink: 0;
+}
+
+/* Canvas (right pane) — a literal white page in a dark shell, deliberately
+   breaking the app's ink-and-paper theme: this IS the document, not UI. */
+.cv-pane {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  background: #12100d;
+}
+.cv-verdict-strip {
+  flex-shrink: 0;
+  padding: 8px 20px;
+  font-size: 12px;
+  border-bottom: 1px solid var(--line);
+  background: var(--bg-raised);
+}
+.cv-verdict-dim {
+  color: var(--text-dim);
+}
+.cv-verdict-strip.is-stale {
+  opacity: 0.55;
+}
+.cv-scroll {
+  flex: 1;
+  overflow: auto;
+  display: flex;
+  justify-content: center;
+  padding: 28px 20px;
+}
+.cv-loading {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-dim);
+}
+.cv-page {
+  position: relative;
+  background: #ffffff;
+  color: #1a1a1a;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.45);
+  height: fit-content;
+  flex-shrink: 0;
+  /* E (Phase 3 bug fix, 2026-08-02): defensive default so a future element
+     added here can't silently inherit body{line-height:1.5} the way
+     .cv-name/.cv-title/.cv-contact used to — every element inside this page
+     must set its own lineHeight explicitly, matching the server's metrics. */
+  line-height: normal;
+}
+.cv-overflow-line {
+  position: absolute;
+  left: 0;
+  right: 0;
+  border-top: 1.5px dashed var(--danger);
+  z-index: 2;
+}
+.cv-overflow-line span {
+  position: absolute;
+  right: 0;
+  top: 2px;
+  font-size: 8pt;
+  color: var(--danger);
+  background: #ffffff;
+  padding: 0 4px;
+  font-family: var(--font-sans);
+}
+.cv-name {
+  text-align: center;
+  font-weight: 700;
+}
+.cv-title {
+  text-align: center;
+  font-weight: 700;
+}
+.cv-contact {
+  text-align: center;
+}
+.cv-section-heading {
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  border-bottom: 1.5px solid #1a1a1a;
+  padding-bottom: 2px;
+}
+.cv-bullet {
+  position: relative;
+}
+.cv-bullet.is-selected {
+  outline: 1.5px dashed #8a8a8a;
+  outline-offset: 2px;
+}
+/* A (Phase 3 bug fix, 2026-08-02): out of the text flow entirely — it used to
+   sit inline as the FIRST content of .cv-bullet, stealing ~7.5pt (6px width +
+   4px margin) from line 1's width in the preview only, which is the direct
+   cause of a bullet that renders as one line in the exported .docx wrapping
+   to two lines here. Positioned into the 12pt hanging-indent gutter (.cv-bullet
+   is position:relative) so it no longer affects layout at all. */
+.cv-fill-dot {
+  position: absolute;
+  left: -10px;
+  top: 0.4em;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+}
+.cv-fill-dot.ok {
+  background: #6a9a5a;
+}
+.cv-fill-dot.stub {
+  background: #d4a857;
+}
+.cv-fill-dot.over {
+  background: #c0392b;
+}
+/* B (Phase 3 bug fix, 2026-08-02): padding added real width (1px each side)
+   per matched keyword, preview-only — a bullet with several matched
+   keywords lost several extra points of line width versus the exported
+   .docx. box-shadow paints the same highlight with zero layout cost. */
+.cv-kw {
+  background: #f3d98f;
+  color: inherit;
+  box-shadow: 2px 0 0 #f3d98f, -2px 0 0 #f3d98f;
+  border-radius: 2px;
+}
+.cv-role-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  font-weight: 700;
+}
+.cv-role-left {
+  flex: 1;
+  min-width: 0;
+}
+.cv-role-dates {
+  white-space: nowrap;
+}
+.cv-edu-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+}
+.cv-edu-dates {
+  font-weight: 700;
+  white-space: nowrap;
+}
+.cv-skills-row {
+  /* block — a single label:items line, no right-aligned counterpart */
+}
+
+/* ---------- On-demand scoring (spec 4.7) ---------- */
+/* An unscored job: same card, dashed spine (no verdict yet), a checkbox to
+   pick it, and the Quick read where the scores would be. */
+.job-card.unscored {
+  border-left-style: dashed;
+}
+.job-select {
+  width: auto;
+  margin: 0 8px 0 0;
+  vertical-align: middle;
+  cursor: pointer;
+}
+.quick-read {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
+  text-align: right;
+  font-size: 10px;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+.quick-read-chip {
+  text-transform: none;
+  letter-spacing: 0;
+  white-space: nowrap;
+}
+.quick-read-chip.qr-strong {
+  color: var(--positive);
+  border-color: var(--positive);
+}
+.quick-read-chip.qr-possible {
+  color: var(--caution);
+  border-color: var(--caution);
+}
+.quick-read-chip.qr-long {
+  color: var(--text-dim);
+}
+.quick-read-chip.qr-below {
+  color: var(--danger);
+  border-color: var(--danger);
+}
+.quick-read-signals {
+  font-size: 11.5px;
+  color: var(--text-dim);
+  margin-top: 4px;
+  line-height: 1.45;
+}
+.qr-signal-good {
+  color: var(--text);
+}
+.selection-bar {
+  position: sticky;
+  bottom: 0;
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  background: var(--bg-raised);
+  border: 1px solid var(--line);
+  border-radius: 2px;
+  padding: 10px 14px;
+  margin: 4px 0 10px;
+  font-size: 12.5px;
+}
+.selection-bar .spacer {
+  flex: 1;
+}
+@media (max-width: 640px) {
+  .job-card.unscored {
+    flex-wrap: wrap;
+  }
+  .quick-read {
+    align-items: flex-start;
+    text-align: left;
+  }
+}

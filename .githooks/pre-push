@@ -1,0 +1,20 @@
+#!/bin/sh
+# Tracked pre-push guards. Previously these lived ONLY in .git/hooks/pre-push on
+# one machine, which is not versioned — so on any fresh clone both guards
+# silently vanished while still appearing to be in place. The scan_deploy_guard
+# handoff predicted exactly this ("the guard doesn't travel with it ... if that
+# ever becomes a real risk, the fix is a tracked script + documented manual
+# step"). This is that fix.
+#
+# Activated by `git config core.hooksPath .githooks`, which `npm run hooks`
+# does. A clone that never runs it is unprotected, so the same two checks are
+# also runnable on demand as `npm run preflight`.
+#
+#   check-no-running-scans.js    — refuses a push while a scan is mid-flight,
+#                                  since a deploy restarts the server under it.
+#   check-migration-timestamps.js — refuses a duplicate migration timestamp,
+#                                  which has really happened twice.
+
+root=$(git rev-parse --show-toplevel)
+node "$root/scripts/check-no-running-scans.js" || exit 1
+node "$root/scripts/check-migration-timestamps.js" || exit 1

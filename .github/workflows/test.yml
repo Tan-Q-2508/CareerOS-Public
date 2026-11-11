@@ -1,0 +1,45 @@
+name: Tests
+
+# The repo's first CI. Every other workflow here is a `curl` against a
+# protected internal endpoint — none checks out code, installs anything, or
+# runs a single test. The 15-suite chain in package.json was only ever run by
+# hand, which meant a suite could go red on master and nothing would say so.
+#
+# Deliberately cheap and network-free: every suite in the chain is plain Node +
+# assert with no DB, no AI, and no third-party HTTP. The one place that WOULD
+# need the network — the §18.3 contract canary's live run — is exercised by its
+# own scheduled workflow against the real endpoints, not here, so a third
+# party's outage can never turn this red.
+#
+# Extension shared-module drift needs no step of its own: test:autofill already
+# asserts apps/extension's copy is byte-identical to packages/shared's
+# canonical one, so a stale copy is a failing suite in the run below.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch: {}
+
+# A second push to the same branch supersedes the first; no value in finishing
+# a run whose commit is already stale.
+concurrency:
+  group: tests-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: npm
+
+      - name: Install
+        run: npm ci
+
+      - name: Test
+        run: npm test

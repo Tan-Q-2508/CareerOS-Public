@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CareerOS — Mockup</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:wght@600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#1C1917;
+    --bg-raised:#242019;
+    --text:#F0EBE1;
+    --text-dim:#B8AF9E;
+    --accent:#C77D3E;
+    --positive:#8FA37E;
+    --danger:#B85C4D;
+    --caution:#D4A857;
+    --line:#3A342B;
+    --font-serif:'Source Serif 4', serif;
+    --font-sans:'Inter', sans-serif;
+    --font-mono:'JetBrains Mono', monospace;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  body{
+    background:var(--bg);
+    color:var(--text);
+    font-family:var(--font-sans);
+    -webkit-font-smoothing:antialiased;
+  }
+  .app{display:flex; min-height:100vh;}
+
+  /* ---------- Sidebar ---------- */
+  .sidebar{
+    width:220px; flex-shrink:0;
+    background:var(--bg-raised);
+    border-right:1px solid var(--line);
+    padding:28px 20px;
+    display:flex; flex-direction:column; gap:32px;
+  }
+  .wordmark{
+    font-family:var(--font-serif); font-weight:700; font-size:19px; letter-spacing:0.02em;
+  }
+  .wordmark span{color:var(--accent);}
+  .nav{display:flex; flex-direction:column; gap:2px;}
+  .nav button{
+    all:unset; cursor:pointer;
+    font-family:var(--font-sans); font-size:13.5px; font-weight:500;
+    color:var(--text-dim); padding:9px 10px; border-radius:3px;
+  }
+  .nav button:hover{color:var(--text); background:rgba(240,235,225,0.04);}
+  .nav button.active{color:var(--text); background:rgba(199,125,62,0.14); border-left:2px solid var(--accent); padding-left:8px;}
+  .cos-box{
+    margin-top:auto;
+    border:1px solid var(--line); border-radius:2px; padding:14px;
+    background:rgba(0,0,0,0.15);
+  }
+  .cos-label{font-size:10.5px; text-transform:uppercase; letter-spacing:0.08em; color:var(--text-dim); margin-bottom:6px;}
+  .cos-amount{font-family:var(--font-mono); font-size:22px; font-weight:600; color:var(--caution);}
+  .cos-buy{
+    display:block; text-align:center; margin-top:10px;
+    font-size:12px; font-weight:600; color:var(--bg); background:var(--accent);
+    padding:7px 0; border-radius:2px; cursor:pointer; text-decoration:none;
+  }
+  .cos-buy.disabled, .btn-primary.disabled{
+    background:var(--line); color:var(--text-dim); cursor:not-allowed; opacity:0.6;
+  }
+  .disabled-note{font-size:10px; color:var(--text-dim); margin-top:4px; text-align:center;}
+
+  /* ---------- Main ---------- */
+  main{flex:1; padding:36px 44px; max-width:1180px;}
+  .view{display:none;}
+  .view.active{display:block;}
+  .view-header{display:flex; justify-content:space-between; align-items:flex-end; margin-bottom:24px; flex-wrap:wrap; gap:12px;}
+  .view-title{font-family:var(--font-serif); font-weight:700; font-size:26px;}
+  .view-sub{color:var(--text-dim); font-size:13px; margin-top:4px;}
+  .btn{
+    font-family:var(--font-sans); font-size:12.5px; font-weight:600;
+    border-radius:2px; padding:9px 16px; cursor:pointer; border:1px solid transparent;
+  }
+  .btn-primary{background:var(--accent); color:var(--bg);}
+  .btn-ghost{background:transparent; color:var(--text); border-color:var(--line);}
+  .pill{
+    font-size:10.5px; font-weight:600; padding:3px 8px; border-radius:20px;
+    text-transform:uppercase; letter-spacing:0.04em;
+  }
+
+  /* ---------- Verdict stamp ---------- */
+  .stamp{
+    font-family:var(--font-sans); font-weight:700; font-size:11px; letter-spacing:0.12em;
+    padding:5px 10px; border:2px solid; border-radius:3px;
+    transform:rotate(-6deg); display:inline-block; text-transform:uppercase;
+  }
+  .stamp.pursue{color:var(--positive); border-color:var(--positive);}
+  .stamp.review{color:var(--caution); border-color:var(--caution);}
+  .stamp.pass{color:var(--danger); border-color:var(--danger); opacity:0.75;}
+
+  /* ---------- Job cards (dashboard) ---------- */
+  .filter-row{display:flex; align-items:center; gap:16px; margin-bottom:20px; font-size:12.5px; color:var(--text-dim);}
+  .job-card{
+    background:var(--bg-raised);
+    border:1px solid var(--line); border-left:4px solid var(--line);
+    border-radius:2px; padding:16px 18px; margin-bottom:10px;
+    display:flex; justify-content:space-between; align-items:center; gap:16px;
+    cursor:pointer;
+  }
+  .job-card.pursue{border-left-color:var(--positive);}
+  .job-card.review{border-left-color:var(--caution);}
+  .job-card.pass{border-left-color:var(--danger); opacity:0.7;}
+  .job-main{flex:1;}
+  .job-title{font-family:var(--font-serif); font-weight:600; font-size:16.5px;}
+  .job-meta{font-size:12px; color:var(--text-dim); margin-top:3px;}
+  .job-source{font-size:10px; letter-spacing:0.05em; text-transform:uppercase; color:var(--text-dim); margin-right:6px;}
+  .job-scores{display:flex; gap:18px; align-items:center;}
+  .score-mini{text-align:center;}
+  .score-mini .num{font-family:var(--font-mono); font-size:17px; font-weight:600;}
+  .score-mini .lbl{font-size:9px; color:var(--text-dim); text-transform:uppercase; letter-spacing:0.05em;}
+
+  /* ---------- Job detail ---------- */
+  .detail-card{background:var(--bg-raised); border:1px solid var(--line); border-radius:2px; padding:28px;}
+  .detail-top{display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:6px;}
+  .detail-title{font-family:var(--font-serif); font-weight:700; font-size:22px;}
+  .detail-meta{color:var(--text-dim); font-size:13px; margin-top:4px;}
+  .score-row{display:flex; gap:36px; margin:22px 0; padding:18px 0; border-top:1px solid var(--line); border-bottom:1px solid var(--line);}
+  .score-block .num{font-family:var(--font-mono); font-size:30px; font-weight:600;}
+  .score-block .lbl{font-size:11px; color:var(--text-dim); text-transform:uppercase; letter-spacing:0.05em; margin-top:2px;}
+  .note{font-style:italic; color:var(--text-dim); font-size:13.5px; margin-bottom:22px;}
+  .tags-row{display:flex; gap:8px; flex-wrap:wrap; margin-bottom:24px;}
+  .risk-tag{border:1px solid var(--line); border-radius:20px; padding:4px 11px; font-size:11.5px; display:flex; align-items:center; gap:6px;}
+  .dot{width:6px; height:6px; border-radius:50%;}
+  .dot.low{background:var(--positive);} .dot.med{background:var(--caution);} .dot.high{background:var(--danger);} .dot.none{background:var(--text-dim);}
+  .kw-grid{display:grid; grid-template-columns:1fr 1fr; gap:18px 32px; margin-bottom:26px;}
+  .kw-col h4{font-size:11px; text-transform:uppercase; letter-spacing:0.05em; color:var(--text-dim); margin-bottom:8px; font-weight:600;}
+  .kw-col ul{list-style:none; font-size:13px; line-height:1.9;}
+  .kw-col.crit li{color:var(--danger);}
+  .kw-col.have li{color:var(--positive);}
+  .actions{display:flex; gap:12px;}
+
+  /* ---------- Tracker ---------- */
+  .tracker-board{display:grid; grid-template-columns:repeat(6,1fr); gap:12px;}
+  .tracker-col h4{font-size:11px; text-transform:uppercase; letter-spacing:0.05em; color:var(--text-dim); margin-bottom:10px;}
+  .tcard{background:var(--bg-raised); border:1px solid var(--line); border-radius:2px; padding:11px; margin-bottom:8px; font-size:12.5px;}
+  .tcard .t{font-family:var(--font-serif); font-weight:600; font-size:13.5px; margin-bottom:3px;}
+  .tcard .c{color:var(--text-dim); font-size:11px;}
+
+  /* ---------- Settings ---------- */
+  .settings-grid{display:grid; grid-template-columns:1fr 1fr; gap:20px;}
+  .setting-card{background:var(--bg-raised); border:1px solid var(--line); border-radius:2px; padding:20px;}
+  .setting-card h3{font-family:var(--font-serif); font-size:16px; margin-bottom:4px;}
+  .setting-card p{font-size:12.5px; color:var(--text-dim); margin-bottom:14px;}
+  input[type=text], select{
+    width:100%; background:var(--bg); border:1px solid var(--line); color:var(--text);
+    padding:9px 10px; border-radius:2px; font-size:12.5px; margin-bottom:8px; font-family:var(--font-sans);
+  }
+  .toggle-row{display:flex; gap:8px; margin-bottom:14px;}
+  .toggle-btn{flex:1; text-align:center; padding:8px; border:1px solid var(--line); border-radius:2px; font-size:12px; cursor:pointer;}
+  .toggle-btn.selected{border-color:var(--accent); background:rgba(199,125,62,0.12); color:var(--accent); font-weight:600;}
+</style>
+</head>
+<body>
+<div class="app">
+  <aside class="sidebar">
+    <div class="wordmark">Career<span>OS</span></div>
+    <nav class="nav">
+      <button class="active" data-view="dashboard">Dashboard</button>
+      <button data-view="detail">Job Detail</button>
+      <button data-view="tracker">Tracker</button>
+      <button data-view="settings">Settings</button>
+    </nav>
+    <div class="cos-box">
+      <div class="cos-label">COS Balance</div>
+      <div class="cos-amount">142</div>
+      <a class="cos-buy disabled" title="Purchasing isn't open yet">Buy COS</a>
+      <div class="disabled-note">Purchasing isn't open yet</div>
+    </div>
+  </aside>
+
+  <main>
+
+    <!-- DASHBOARD -->
+    <section class="view active" id="dashboard">
+      <div class="view-header">
+        <div>
+          <div class="view-title">Today's Scan</div>
+          <div class="view-sub">Business Systems Analyst · San Jose, CA</div>
+        </div>
+        <button class="btn btn-primary">Run New Scan</button>
+      </div>
+      <div class="filter-row">
+        <span>Showing verdict ≥ Review</span> · <span>18 jobs scored</span> · <span>CS + BYO</span>
+      </div>
+
+      <div class="job-card pursue">
+        <div class="job-main">
+          <span class="job-source">CS</span>
+          <span class="job-title">Business Systems Analyst — Manufacturing</span>
+          <div class="job-meta">FormFactor · San Jose, CA · Posted 2 days ago</div>
+        </div>
+        <div class="job-scores">
+          <div class="score-mini"><div class="num">8.9</div><div class="lbl">ATS</div></div>
+          <div class="score-mini"><div class="num">8.4</div><div class="lbl">Callback</div></div>
+          <div class="score-mini"><div class="num">8.7</div><div class="lbl">Overall</div></div>
+        </div>
+        <span class="stamp pursue">Pursue</span>
+      </div>
+
+      <div class="job-card review">
+        <div class="job-main">
+          <span class="job-source">BYO</span>
+          <span class="job-title">Supply Chain Operations Analyst</span>
+          <div class="job-meta">Lucid Motors · Newark, CA · Posted 1 day ago</div>
+        </div>
+        <div class="job-scores">
+          <div class="score-mini"><div class="num">7.1</div><div class="lbl">ATS</div></div>
+          <div class="score-mini"><div class="num">6.8</div><div class="lbl">Callback</div></div>
+          <div class="score-mini"><div class="num">7.2</div><div class="lbl">Overall</div></div>
+        </div>
+        <span class="stamp review">Review</span>
+      </div>
+
+      <div class="job-card pursue">
+        <div class="job-main">
+          <span class="job-source">CS</span>
+          <span class="job-title">Business Operations Analyst</span>
+          <div class="job-meta">Samsara · San Francisco, CA · Posted 3 days ago</div>
+        </div>
+        <div class="job-scores">
+          <div class="score-mini"><div class="num">8.2</div><div class="lbl">ATS</div></div>
+          <div class="score-mini"><div class="num">7.9</div><div class="lbl">Callback</div></div>
+          <div class="score-mini"><div class="num">8.1</div><div class="lbl">Overall</div></div>
+        </div>
+        <span class="stamp pursue">Pursue</span>
+      </div>
+
+      <div class="job-card pass">
+        <div class="job-main">
+          <span class="job-source">CS</span>
+          <span class="job-title">Senior Financial Analyst, FP&amp;A</span>
+          <div class="job-meta">Cisco · San Jose, CA · Posted 3 days ago</div>
+        </div>
+        <div class="job-scores">
+          <div class="score-mini"><div class="num">4.8</div><div class="lbl">ATS</div></div>
+          <div class="score-mini"><div class="num">5.1</div><div class="lbl">Callback</div></div>
+          <div class="score-mini"><div class="num">4.9</div><div class="lbl">Overall</div></div>
+        </div>
+        <span class="stamp pass">Pass</span>
+      </div>
+    </section>
+
+    <!-- JOB DETAIL -->
+    <section class="view" id="detail">
+      <div class="view-header">
+        <div class="view-title">Job Detail</div>
+      </div>
+      <div class="detail-card">
+        <div class="detail-top">
+          <div>
+            <div class="detail-title">Business Systems Analyst — Manufacturing</div>
+            <div class="detail-meta">FormFactor · San Jose, CA · via Core Scraper · Posted 2 days ago</div>
+          </div>
+          <span class="stamp pursue">Pursue</span>
+        </div>
+
+        <div class="score-row">
+          <div class="score-block"><div class="num">8.9</div><div class="lbl">ATS Match</div></div>
+          <div class="score-block"><div class="num">8.4</div><div class="lbl">Callback Odds</div></div>
+          <div class="score-block"><div class="num">8.7</div><div class="lbl">Overall Fit</div></div>
+        </div>
+
+        <p class="note">"Strong domain match on ERP/manufacturing ops — the NetSuite background reads directly against their Oracle requirement, and seniority lines up cleanly with the 2-4 year range."</p>
+
+        <div class="tags-row">
+          <span class="risk-tag"><span class="dot none"></span>Experience: none</span>
+          <span class="risk-tag"><span class="dot none"></span>Seniority: none</span>
+          <span class="risk-tag"><span class="dot med"></span>Technology: medium</span>
+          <span class="risk-tag"><span class="dot low"></span>Domain: low</span>
+          <span class="risk-tag"><span class="dot none"></span>Visa: none</span>
+        </div>
+
+        <div class="kw-grid">
+          <div class="kw-col crit">
+            <h4>Critical Missing</h4>
+            <ul><li>Oracle Fusion (have NetSuite)</li></ul>
+          </div>
+          <div class="kw-col have">
+            <h4>Already Demonstrated</h4>
+            <ul><li>ERP migration</li><li>BOM/ECO management</li><li>Power BI reporting</li></ul>
+          </div>
+          <div class="kw-col">
+            <h4>Transferable</h4>
+            <ul><li>"NetSuite" → reword as "Oracle-family ERP"</li></ul>
+          </div>
+          <div class="kw-col">
+            <h4>Hidden Strengths</h4>
+            <ul><li>Dashboard bullets imply data visualization skill not listed explicitly</li></ul>
+          </div>
+        </div>
+
+        <div class="actions">
+          <button class="btn btn-primary">Generate Resume — 9 COS</button>
+          <button class="btn btn-primary">Generate Cover Letter — 8 COS</button>
+          <button class="btn btn-ghost">Save to Tracker</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- TRACKER -->
+    <section class="view" id="tracker">
+      <div class="view-header">
+        <div class="view-title">Application Tracker</div>
+        <button class="btn btn-ghost">Check Email for Updates</button>
+      </div>
+      <div class="tracker-board">
+        <div class="tracker-col"><h4>Saved</h4>
+          <div class="tcard"><div class="t">Business Ops Analyst</div><div class="c">Samsara</div></div>
+          <div class="tcard"><div class="t">Supply Chain Analyst</div><div class="c">Lucid Motors</div></div>
+        </div>
+        <div class="tracker-col"><h4>Applied</h4>
+          <div class="tcard"><div class="t">BSA — Manufacturing</div><div class="c">FormFactor</div></div>
+        </div>
+        <div class="tracker-col"><h4>Interviewing</h4>
+          <div class="tcard"><div class="t">Ops Analyst</div><div class="c">Zoox</div></div>
+        </div>
+        <div class="tracker-col"><h4>Offer</h4></div>
+        <div class="tracker-col"><h4>Rejected</h4>
+          <div class="tcard"><div class="t">Program Coordinator</div><div class="c">Nvidia</div></div>
+        </div>
+        <div class="tracker-col"><h4>Accepted</h4></div>
+      </div>
+    </section>
+
+    <!-- SETTINGS -->
+    <section class="view" id="settings">
+      <div class="view-header">
+        <div class="view-title">Settings</div>
+      </div>
+      <div class="settings-grid">
+        <div class="setting-card">
+          <h3>Sourcing</h3>
+          <p>Core Scraper runs by default for every scan, no setup needed.</p>
+          <div class="toggle-row">
+            <div class="toggle-btn selected">Core Scraper — Always On</div>
+          </div>
+          <p>BYO Scraper is an optional add-on. Connect your own scrapers (any board) to unlock it.</p>
+          <input type="text" placeholder="Apify API Token">
+          <input type="text" placeholder="Apify Actor ID">
+          <button class="btn btn-primary">Add a Scraper</button>
+        </div>
+
+        <div class="setting-card">
+          <h3>AI Provider</h3>
+          <p>Use CareerOS AI (billed in COS) or bring your own key.</p>
+          <div class="toggle-row">
+            <div class="toggle-btn selected">CareerOS AI</div>
+            <div class="toggle-btn">Bring Your Own Key</div>
+          </div>
+          <select><option>Anthropic</option><option>OpenAI-compatible</option><option>Gemini</option></select>
+          <input type="text" placeholder="API Key">
+          <button class="btn btn-ghost">Save</button>
+        </div>
+
+        <div class="setting-card">
+          <h3>File Delivery</h3>
+          <p>Every generated file can always be downloaded directly.</p>
+          <button class="btn btn-ghost">Connect Google Drive</button>
+        </div>
+
+        <div class="setting-card">
+          <h3>COS Balance</h3>
+          <p>142 COS available. View a breakdown of what each action costs.</p>
+          <button class="btn btn-primary disabled" title="Purchasing isn't open yet">Buy COS</button>
+          <div class="disabled-note">Purchasing isn't open yet — admin-granted for now</div>
+          <button class="btn btn-ghost" style="margin-top:8px;">View Pricing Breakdown</button>
+        </div>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<script>
+  document.querySelectorAll('.nav button').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+      document.querySelectorAll('.nav button').forEach(b=>b.classList.remove('active'));
+      document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById(btn.dataset.view).classList.add('active');
+    });
+  });
+  document.querySelectorAll('.job-card').forEach(card=>{
+    card.addEventListener('click',()=>{
+      document.querySelectorAll('.nav button').forEach(b=>b.classList.remove('active'));
+      document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
+      document.querySelector('[data-view="detail"]').classList.add('active');
+      document.getElementById('detail').classList.add('active');
+    });
+  });
+</script>
+</body>
+</html>

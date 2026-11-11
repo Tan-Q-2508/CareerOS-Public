@@ -1,0 +1,32 @@
+name: ATS Slug-Pattern Mining
+
+# Weekly run of spec 4.6.11's candidate-generation-rule mining pass (Phase 4,
+# §15 #25d): scores each rule in packages/shared/src/sourcing/ats/slugRules.js
+# against company_ats_registry's confirmed name/slug pairs and files the report
+# in slug_pattern_runs. Report-only — it changes nothing about live detection by
+# itself; a maintainer reads the run and, if a rule clears both gates, promotes
+# it by hand via tunables.atsDirect.detect.minedRules. See slugMining.js's
+# header for why that promotion step is manual.
+#
+# Deliberately its own workflow, separate from company-resweep.yml: different
+# table (registry, not unresolved), no reason to share a cadence, and this one
+# does no third-party calls at all — it's arithmetic over rows already stored.
+#
+# Required repo secrets (Settings -> Secrets and variables -> Actions):
+#   ADMIN_SECRET  — same value as the server's ADMIN_SECRET env var
+#   SERVER_URL    — e.g. https://careeros-server.onrender.com (no trailing slash)
+
+on:
+  schedule:
+    - cron: '0 6 * * 1' # every Monday
+  workflow_dispatch: {} # manual "Run workflow" button, for testing
+
+jobs:
+  trigger:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Call mine-slug-patterns
+        run: |
+          curl -fsS -X POST \
+            -H "X-Admin-Secret: ${{ secrets.ADMIN_SECRET }}" \
+            "${{ secrets.SERVER_URL }}/api/internal/mine-slug-patterns"

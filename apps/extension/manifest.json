@@ -1,0 +1,129 @@
+{
+  "manifest_version": 3,
+  "name": "CareerOS Autofill",
+  "version": "0.3.0",
+  "description": "Fills job application forms from your CareerOS profile and answer bank. Never submits anything for you.",
+  "permissions": ["storage", "activeTab", "scripting"],
+  "host_permissions": [
+    "https://careeros-server.onrender.com/*",
+    "https://*.supabase.co/*"
+  ],
+  "icons": {
+    "16": "icons/icon-16.png",
+    "32": "icons/icon-32.png",
+    "48": "icons/icon-48.png",
+    "128": "icons/icon-128.png"
+  },
+  "action": {
+    "default_title": "Autofill this application with CareerOS",
+    "default_icon": {
+      "16": "icons/icon-16.png",
+      "32": "icons/icon-32.png",
+      "48": "icons/icon-48.png",
+      "128": "icons/icon-128.png"
+    }
+  },
+  "background": {
+    "service_worker": "src/background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": [
+        "https://careeros-web-phur.onrender.com/*",
+        "http://localhost:5173/*"
+      ],
+      "js": ["src/auth/tokenBridge.js"],
+      "run_at": "document_idle"
+    },
+    {
+      "matches": [
+        "https://job-boards.greenhouse.io/*",
+        "https://boards.greenhouse.io/*",
+        "https://*.greenhouse.io/*",
+        "https://app.careerpuck.com/*"
+      ],
+      "js": [
+        "src/core/normalizeQuestion.js",
+        "src/core/fieldMap.js",
+        "src/core/guards.js",
+        "src/core/matcher.js",
+        "src/core/filler.js",
+        "src/ui/panel.js",
+        "src/adapters/greenhouse.js",
+        "src/contentScript.js"
+      ],
+      "all_frames": true,
+      "run_at": "document_idle"
+    },
+    {
+      "matches": [
+        "https://jobs.lever.co/*",
+        "https://jobs.eu.lever.co/*"
+      ],
+      "js": [
+        "src/core/normalizeQuestion.js",
+        "src/core/fieldMap.js",
+        "src/core/guards.js",
+        "src/core/matcher.js",
+        "src/core/filler.js",
+        "src/ui/panel.js",
+        "src/adapters/lever.js",
+        "src/contentScript.js"
+      ],
+      "all_frames": true,
+      "run_at": "document_idle"
+    },
+    {
+      "matches": [
+        "https://jobs.ashbyhq.com/*"
+      ],
+      "js": [
+        "src/core/normalizeQuestion.js",
+        "src/core/fieldMap.js",
+        "src/core/guards.js",
+        "src/core/matcher.js",
+        "src/core/filler.js",
+        "src/ui/panel.js",
+        "src/adapters/ashby.js",
+        "src/contentScript.js"
+      ],
+      "all_frames": true,
+      "run_at": "document_idle"
+    },
+    {
+      "matches": [
+        "https://apply.workable.com/*"
+      ],
+      "js": [
+        "src/core/normalizeQuestion.js",
+        "src/core/fieldMap.js",
+        "src/core/guards.js",
+        "src/core/matcher.js",
+        "src/core/filler.js",
+        "src/ui/panel.js",
+        "src/adapters/workable.js",
+        "src/contentScript.js"
+      ],
+      "all_frames": true,
+      "run_at": "document_idle"
+    },
+    {
+      "matches": [
+        "https://*.myworkdayjobs.com/*",
+        "https://*.myworkdaysite.com/*"
+      ],
+      "js": [
+        "src/core/normalizeQuestion.js",
+        "src/core/fieldMap.js",
+        "src/core/guards.js",
+        "src/core/matcher.js",
+        "src/core/filler.js",
+        "src/ui/panel.js",
+        "src/adapters/workday.js",
+        "src/contentScript.js"
+      ],
+      "all_frames": true,
+      "run_at": "document_idle"
+    }
+  ]
+}
