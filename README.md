@@ -4,6 +4,8 @@ A resume-centric job-search platform: it finds postings, scores them against *yo
 
 > **This is the public showcase of a private, deployed product.** It is the real application code, published so the engineering can be reviewed. Credentials, personal data, internal build notes and production configuration are not included, so it will not run end-to-end without your own Supabase project and API keys. The code is shown for review; all rights reserved.
 
+**Live app: https://careeros-web-phur.onrender.com** (hosted on a free tier, so the first load can take up to a minute while the server wakes up.)
+
 ~65k lines of JavaScript · 23 test suites (plain Node + `assert`, no network) · 74 SQL migrations · multi-tenant from day one.
 
 ---
